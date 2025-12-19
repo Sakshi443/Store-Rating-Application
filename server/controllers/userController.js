@@ -9,25 +9,34 @@ const getUsers = async (req, res) => {
     try {
         const users = await User.findAll({
             attributes: { exclude: ['password'] },
-            include: [{ model: Store, include: [Rating] }]
+            include: [{
+                model: Store,
+                attributes: ['id'], // We only need to iterate stores
+                include: [{ model: Rating, attributes: ['score'] }] // Only need scores
+            }],
+            order: [['createdAt', 'DESC']]
         });
 
         const usersWithStats = users.map(user => {
             let averageRating = null;
 
-            if (user.role === 'Store Owner' && user.Stores) {
+            if (user.role === 'Store Owner' && user.Stores && user.Stores.length > 0) {
                 let totalScore = 0;
                 let totalRatings = 0;
 
                 user.Stores.forEach(store => {
-                    store.Ratings.forEach(rating => {
-                        totalScore += rating.score;
-                        totalRatings++;
-                    });
+                    if (store.Ratings) {
+                        store.Ratings.forEach(rating => {
+                            totalScore += rating.score;
+                            totalRatings++;
+                        });
+                    }
                 });
 
                 if (totalRatings > 0) {
                     averageRating = parseFloat((totalScore / totalRatings).toFixed(1));
+                } else {
+                    averageRating = 0;
                 }
             }
 

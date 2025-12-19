@@ -9,18 +9,23 @@ const { User, Store, Rating } = require('../models');
 // @access  Private (Admin only)
 const getStores = async (req, res) => {
     try {
+        // Optimized query: Only fetch score from ratings
         const stores = await Store.findAll({
             include: [
                 { model: User, attributes: ['id', 'name', 'email', 'address', 'role'] },
-                { model: Rating }
-            ]
+                { model: Rating, attributes: ['score'] }
+            ],
+            order: [['createdAt', 'DESC']]
         });
 
         const storesWithRatings = stores.map(store => {
             const ratings = store.Ratings || [];
-            const avgRating = ratings.length > 0
-                ? ratings.reduce((acc, curr) => acc + curr.score, 0) / ratings.length
-                : 0;
+            let avgRating = 0;
+
+            if (ratings.length > 0) {
+                const sum = ratings.reduce((acc, curr) => acc + curr.score, 0);
+                avgRating = sum / ratings.length;
+            }
 
             return {
                 id: store.id,

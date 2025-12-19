@@ -35,9 +35,11 @@ const connectDB = async () => {
         await sequelize.authenticate();
         console.log('✅ Database connected successfully.');
 
-        // Sync database (Use { alter: true } to update schema without dropping data)
-        await sequelize.sync({ alter: true });
-        console.log('Database synced.');
+        // Only sync if explicitly requested (saves time on cold starts)
+        if (process.env.DB_SYNC === 'true') {
+            await sequelize.sync({ alter: true });
+            console.log('Database synced.');
+        }
     } catch (error) {
         console.error('❌ Unable to connect to the database:', error.message);
         throw error;
