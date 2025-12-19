@@ -113,7 +113,7 @@ const Dashboard = () => {
         store.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-black p-8 font-medium">Loading dashboard...</div>;
 
 
     const statData = [
@@ -147,30 +147,30 @@ const Dashboard = () => {
         <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h2>
-                    <p className="text-slate-500">
-                        Welcome back, {user?.name || user?.email}! Here's an overview of your account.
+                    <h2 className="text-4xl font-black tracking-tight text-[#111]">My Dashboard.</h2>
+                    <p className="text-gray-500 font-medium mt-2">
+                        Welcome back, <span className="text-black font-bold">{user?.name || user?.email}</span>!
                     </p>
                 </div>
-                <Button variant="secondary" onClick={() => setShowPasswordModal(true)}>
+                <Button variant="secondary" onClick={() => setShowPasswordModal(true)} className="bg-white border text-black hover:bg-gray-50 border-gray-200">
                     <Lock className="mr-2 h-4 w-4" /> Change Password
                 </Button>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {statData.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
-                        <Card key={index} className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-all">
+                        <Card key={index} className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-500">
+                                <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                                     {stat.title}
                                 </CardTitle>
-                                <Icon className="h-4 w-4 text-slate-400" />
+                                <Icon className="h-4 w-4 text-black" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
-                                <p className="text-xs text-slate-500">{stat.description}</p>
+                                <div className="text-3xl font-black text-[#111]">{stat.value}</div>
+                                <p className="text-xs text-gray-500 font-medium mt-1">{stat.description}</p>
                             </CardContent>
                         </Card>
                     );
@@ -178,39 +178,40 @@ const Dashboard = () => {
             </div>
 
             {/* Stores Section */}
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-gray-200 bg-white shadow-sm">
                 <CardHeader>
-                    <CardTitle>Registered Stores</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-xl font-bold">Registered Stores</CardTitle>
+                    <CardDescription className="text-gray-500">
                         Browse stores and submit your ratings.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="mb-4 w-full sm:max-w-sm">
+                    <div className="mb-6 w-full sm:max-w-sm">
                         <Input
                             placeholder="Search stores by name or address..."
                             icon={Search}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-gray-50 border-gray-200"
                         />
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredStores.map(store => (
-                            <div key={store.id} className="rounded-lg border border-slate-200 p-4 bg-slate-50 hover:bg-white hover:shadow-md transition-all">
-                                <div className="flex items-start justify-between mb-2">
+                            <div key={store.id} className="rounded-xl border border-gray-200 p-6 bg-white hover:border-black transition-all group">
+                                <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <h4 className="font-semibold text-slate-900">{store.name}</h4>
-                                        <p className="text-sm text-slate-500">{store.address}</p>
+                                        <h4 className="font-bold text-lg text-[#111] leading-tight group-hover:underline decoration-2 underline-offset-4">{store.name}</h4>
+                                        <p className="text-sm text-gray-500 font-medium mt-1">{store.address}</p>
                                     </div>
-                                    <div className="flex items-center text-amber-500 text-sm font-bold">
+                                    <div className="flex items-center text-black text-sm font-bold bg-[#FFDA1A] px-2 py-1">
                                         <span className="mr-1">{store.rating}</span>
-                                        <span className="text-slate-400 font-normal">({store.ratingCount})</span>
+                                        <span className="text-black/60 font-medium text-xs">({store.ratingCount})</span>
                                     </div>
                                 </div>
-                                <div className="mt-4 pt-4 border-t border-slate-200">
+                                <div className="mt-4 pt-4 border-t border-gray-100">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-xs text-slate-400">Your Rating:</span>
+                                        <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Your Rating</span>
                                         <StarRating
                                             rating={store.myRating}
                                             onRatingChange={(score) => handleRatingChange(store.id, score)}
@@ -220,7 +221,8 @@ const Dashboard = () => {
                             </div>
                         ))}
                         {filteredStores.length === 0 && (
-                            <div className="col-span-full py-8 text-center text-slate-500">
+                            <div className="col-span-full py-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-lg">
+                                <Search className="mx-auto h-8 w-8 opacity-20 mb-2" />
                                 No stores found matching your search.
                             </div>
                         )}
@@ -235,8 +237,8 @@ const Dashboard = () => {
                 title="Change Password"
             >
                 <form onSubmit={handleChangePassword} className="space-y-4">
-                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{passwordError}</div>}
-                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{passwordSuccess}</div>}
+                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-100 font-medium">{passwordError}</div>}
+                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-3 rounded border border-green-100 font-medium">{passwordSuccess}</div>}
 
                     <Input
                         label="Current Password"
@@ -244,6 +246,7 @@ const Dashboard = () => {
                         value={passwordData.currentPassword}
                         onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="New Password"
@@ -251,12 +254,13 @@ const Dashboard = () => {
                         value={passwordData.newPassword}
                         onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <div className="flex justify-end gap-2 pt-4">
                         <Button type="button" variant="ghost" onClick={() => setShowPasswordModal(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Update Password</Button>
+                        <Button type="submit" className="bg-black text-white hover:bg-gray-800 font-bold">Update Password</Button>
                     </div>
                 </form>
             </Modal>

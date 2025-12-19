@@ -1,8 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Shield, Store, Zap, Heart, TrendingUp, Info } from 'lucide-react';
-import { Button } from '../components/Button';
+import { ArrowRight, Star, Shield, Store, LayoutGrid, User, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import config from '../config';
 
@@ -23,7 +22,7 @@ const LandingPage = () => {
                 const res = await fetch(`${config.API_URL}/guest/stores`);
                 if (res.ok) {
                     const data = await res.json();
-                    setStores(data.slice(0, 6)); // Show top 6 newest
+                    setStores(data.slice(0, 3)); // Show top 3 for the big cards
                 }
             } catch (error) {
                 console.error("Failed to fetch stores", error);
@@ -33,300 +32,288 @@ const LandingPage = () => {
     }, []);
 
     return (
-        <div className="min-h-screen w-full bg-slate-50 text-slate-900 selection:bg-rose-500/10">
-            {/* Background Gradients - Light & Airy */}
-            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-rose-200/40 rounded-full blur-[120px]" />
-                <div className="absolute top-[40%] left-[40%] w-[400px] h-[400px] bg-amber-100/40 rounded-full blur-[100px]" />
-            </div>
-
-            {/* Navbar */}
-            <nav className="relative z-50 border-b border-slate-200/60 bg-white/70 backdrop-blur-xl">
-                <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
-                            <Store className="h-5 w-5 text-white" />
+        <div className="min-h-screen bg-white text-black font-sans selection:bg-[#FFDA1A] selection:text-black">
+            {/* Navbar - Sticky & Minimal */}
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+                <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+                    <Link to="/" className="flex items-center gap-2 group">
+                        <div className="h-8 w-8 bg-[#0058A3] rounded-full flex items-center justify-center">
+                            <span className="text-[#FFDA1A] font-bold text-lg">S</span>
                         </div>
-                        <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">
-                            StoreRate
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <Link to="/login">
-                            <Button variant="ghost" className="text-slate-600 hover:text-slate-900 hover:bg-slate-100">
-                                Sign In
-                            </Button>
+                        <span className="text-xl font-extrabold tracking-tight">StoreRate.</span>
+                    </Link>
+
+                    <div className="flex items-center gap-4 md:gap-8">
+                        <Link to="/login" className="hidden md:block text-sm font-bold hover:text-gray-600 transition-colors">
+                            Log in
                         </Link>
-                        <Link to="/signup">
-                            <Button className="bg-gradient-to-r from-rose-600 to-orange-600 hover:from-rose-500 hover:to-orange-500 text-white border-none shadow-md shadow-rose-500/20 transition-all duration-300">
-                                Get Started
-                            </Button>
+                        <Link to="/signup" className="hidden md:block text-sm font-bold hover:text-gray-600 transition-colors">
+                            Sign up
+                        </Link>
+                        <Link to="/stores">
+                            <button className="bg-black hover:bg-gray-800 text-white text-sm font-bold px-6 py-3 rounded-full transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                                Browse stores <span className="bg-[#FFDA1A] text-black rounded-full p-0.5"><ArrowRight size={12} strokeWidth={3} /></span>
+                            </button>
                         </Link>
                     </div>
                 </div>
             </nav>
 
-            {/* Hero Section */}
-            <section className="relative z-10 pt-20 pb-32 overflow-hidden">
-                <div className="container mx-auto px-6 text-center">
+            {/* Hero Section - Refined & Attractive */}
+            <section className="pt-28 pb-12 px-6 lg:pt-36 lg:pb-24 bg-[#F5F5F5] overflow-hidden">
+                <div className="container mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="max-w-4xl mx-auto space-y-8"
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 text-rose-600 text-sm font-medium mb-4 shadow-sm">
-                            <Zap className="h-4 w-4" />
-                            <span>Revolutionizing Store Discovery</span>
+                        <div className="space-y-8 z-10">
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-[#111]">
+                                Rate Real. <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0058A3] to-[#004080]">Shop Better.</span>
+                            </h1>
+                            <p className="text-lg md:text-xl font-medium text-gray-600 max-w-lg leading-relaxed">
+                                The transparent platform connecting shoppers with the best local businesses. trusted by thousands of verified users.
+                            </p>
+
+                            <div className="flex flex-wrap gap-4">
+                                <Link to="/stores">
+                                    <button className="bg-[#FFDA1A] text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-[#e6c417] transition-all hover:-translate-y-1 shadow-lg shadow-[#FFDA1A]/20 flex items-center gap-2">
+                                        Explore Stores <ArrowRight size={18} strokeWidth={2.5} />
+                                    </button>
+                                </Link>
+                                <Link to="/signup">
+                                    <button className="px-8 py-4 rounded-full font-bold text-lg bg-white border border-gray-200 hover:border-black hover:shadow-md transition-all text-gray-900">
+                                        Join Free
+                                    </button>
+                                </Link>
+                            </div>
+
+                            {/* Trust Badge */}
+                            <div className="flex items-center gap-4 pt-4">
+                                <div className="flex -space-x-3">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className="h-10 w-10 rounded-full border-2 border-[#F5F5F5] bg-gray-300" />
+                                    ))}
+                                    <div className="h-10 w-10 rounded-full border-2 border-[#F5F5F5] bg-black text-white flex items-center justify-center text-xs font-bold">2k+</div>
+                                </div>
+                                <div className="text-sm font-semibold text-gray-500">
+                                    Joined the community
+                                </div>
+                            </div>
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-tight text-slate-900">
-                            Discover & Rate the <br />
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500">
-                                Best Local Stores
-                            </span>
-                        </h1>
-
-                        <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                            Connect with millions of shoppers and store owners. Share your experiences, find hidden gems, and help businesses grow with transparent feedback.
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-                            <Link to="/signup">
-                                <Button size="lg" className="h-14 px-8 text-lg bg-slate-900 text-white hover:bg-slate-800 border-0 hover:scale-105 transition-transform shadow-xl shadow-slate-900/10">
-                                    Create Free Account
-                                </Button>
-                            </Link>
-                            <Link to="/stores">
-                                <Button size="lg" variant="secondary" className="h-14 px-8 text-lg bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-sm">
-                                    Browse Stores
-                                </Button>
-                            </Link>
+                        {/* Hero Graphic - Modern composition */}
+                        <div className="relative">
+                            <div className="relative h-[400px] lg:h-[500px] w-full bg-white rounded-3xl overflow-hidden shadow-2xl shadow-gray-200/50 flex items-center justify-center group hover:scale-[1.02] transition-transform duration-500">
+                                <div className="absolute top-0 right-0 p-8 opacity-10">
+                                    <LayoutGrid size={200} />
+                                </div>
+                                <Star size={180} className="text-[#FFDA1A] rotate-12 drop-shadow-2xl" strokeWidth={0} fill="#FFDA1A" />
+                                <motion.div
+                                    animate={{ y: [0, -20, 0] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute bottom-12 left-8 bg-white/90 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-4 max-w-xs"
+                                >
+                                    <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                        <Shield size={24} />
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-gray-900">100% Verified</div>
+                                        <div className="text-xs text-gray-500">Authentic reviews only</div>
+                                    </div>
+                                </motion.div>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Platform Overview (User Requested "Option") */}
-            <section className="relative z-10 py-16 bg-white border-y border-slate-200">
-                <div className="container mx-auto px-6">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                                <Info className="h-6 w-6" />
+            {/* Features Section - Compact & Clean */}
+            <section className="py-20 px-6">
+                <div className="container mx-auto space-y-24">
+                    {/* Feature 1 */}
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div className="order-2 md:order-1 relative">
+                            <div className="bg-[#FFDA1A]/10 rounded-3xl p-8 lg:p-12 relative overflow-hidden group">
+                                <Star className="w-32 h-32 text-[#FFDA1A] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 group-hover:scale-110 transition-transform duration-500" />
+                                <div className="relative z-10 bg-white rounded-2xl p-6 shadow-xl border border-gray-100 space-y-4 max-w-sm mx-auto transform group-hover:-translate-y-2 transition-transform duration-300">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex gap-1">
+                                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={16} className="fill-[#FFDA1A] text-[#FFDA1A]" />)}
+                                        </div>
+                                        <span className="text-xs font-bold text-gray-400">Just now</span>
+                                    </div>
+                                    <p className="text-gray-600 text-sm font-medium leading-relaxed">
+                                        "Found the best vintage store in downtown! The reviews were spot on. Highly recommended."
+                                    </p>
+                                    <div className="flex items-center gap-3 pt-2">
+                                        <div className="h-8 w-8 bg-gray-200 rounded-full" />
+                                        <div className="text-sm font-bold">Sarah Jenkins</div>
+                                    </div>
+                                </div>
                             </div>
-                            <h2 className="text-2xl font-bold text-slate-900">Platform Overview</h2>
                         </div>
-                        <div className="bg-slate-50 rounded-2xl p-8 border border-slate-200 prose prose-slate max-w-none">
-                            <p className="text-lg text-slate-700 leading-relaxed mb-6">
-                                <strong>StoreRate</strong> is a comprehensive web application designed to connect shoppers with local businesses.
-                                Our platform facilitates transparent feedback through a robust 5-star rating system.
+                        <div className="order-1 md:order-2 space-y-6">
+                            <div className="inline-flex items-center gap-2 bg-black/5 text-black px-4 py-1.5 rounded-full text-sm font-bold">
+                                <User size={14} /> For Shoppers
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#111]">Your voice matters.</h2>
+                            <p className="text-lg text-gray-500 leading-relaxed">
+                                Share your experiences with 1-5 star ratings. Help your neighbors find the best spots and avoid the rest.
                             </p>
-                            <ul className="grid md:grid-cols-2 gap-4 list-none pl-0">
-                                <li className="flex gap-3 items-start p-4 bg-white rounded-xl border border-slate-200">
-                                    <Star className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-                                    <span className="text-slate-600">Submit ratings (1-5 stars) for registered stores.</span>
-                                </li>
-                                <li className="flex gap-3 items-start p-4 bg-white rounded-xl border border-slate-200">
-                                    <Shield className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
-                                    <span className="text-slate-600">Single login system with secure role-based access control.</span>
-                                </li>
-                                <li className="flex gap-3 items-start p-4 bg-white rounded-xl border border-slate-200">
-                                    <Heart className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
-                                    <span className="text-slate-600">Normal users can easily sign up and start rating.</span>
-                                </li>
-                                <li className="flex gap-3 items-start p-4 bg-white rounded-xl border border-slate-200">
-                                    <Store className="h-5 w-5 text-indigo-500 shrink-0 mt-0.5" />
-                                    <span className="text-slate-600"><strong>Guest Access:</strong> Browsing stores and details is open to everyone. Login is required for rating.</span>
-                                </li>
+                            <ul className="space-y-3 pt-2">
+                                {['Verified Reviews', 'Transparent History', 'Community Trust'].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3 font-medium text-gray-700">
+                                        <div className="h-1.5 w-1.5 bg-[#0058A3] rounded-full" />
+                                        {item}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
+
+                    {/* Feature 2 */}
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-2 bg-[#0058A3]/10 text-[#0058A3] px-4 py-1.5 rounded-full text-sm font-bold">
+                                <TrendingUp size={14} /> For Owners
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[#111]">Grow with feedback.</h2>
+                            <p className="text-lg text-gray-500 leading-relaxed">
+                                Claim your business page, respond to customers, and use real-time analytics to improve your service.
+                            </p>
+                            <div className="pt-4">
+                                <Link to="/signup" className="inline-flex items-center font-bold text-[#0058A3] hover:underline decoration-2 underline-offset-4 gap-2 group">
+                                    Register your business <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="bg-[#F5F5F5] rounded-3xl p-8 lg:p-12 relative group overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#F5F5F5] to-gray-200" />
+                            <div className="relative z-10 grid grid-cols-2 gap-4">
+                                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 transform translate-y-8 group-hover:translate-y-6 transition-transform duration-500">
+                                    <div className="text-3xl font-black text-[#111] mb-1">4.8</div>
+                                    <div className="text-xs text-gray-500 font-medium">Average Rating</div>
+                                </div>
+                                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 transform group-hover:-translate-y-2 transition-transform duration-500 delay-100">
+                                    <div className="text-3xl font-black text-[#0058A3] mb-1">+24%</div>
+                                    <div className="text-xs text-gray-500 font-medium">Customer Visits</div>
+                                </div>
+                                <div className="col-span-2 bg-[#111] p-4 rounded-xl shadow-lg transform group-hover:scale-[1.02] transition-transform duration-500 delay-200">
+                                    <div className="flex justify-between items-center text-white mb-2">
+                                        <span className="text-xs font-bold text-gray-400">Total Reviews</span>
+                                        <Star size={14} className="fill-[#FFDA1A] text-[#FFDA1A]" />
+                                    </div>
+                                    <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                        <div className="h-full w-[80%] bg-[#FFDA1A] rounded-full" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Featured Stores (Guest View) */}
-            <section className="relative z-10 py-24 bg-slate-50">
-                <div className="container mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Featured Stores</h2>
-                        <p className="text-slate-600 max-w-2xl mx-auto">
-                            Browse some of our top-rated local businesses. Log in to view full details and submit your own ratings.
-                        </p>
+            {/* Featured Stores Grid - Attractive Dark Mode */}
+            <section className="py-20 px-6 bg-[#111] overflow-hidden">
+                <div className="container mx-auto">
+                    <div className="flex flex-wrap justify-between items-end mb-12 gap-8">
+                        <div>
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-2">Fresh <span className="text-[#FFDA1A]">Finds.</span></h2>
+                            <p className="text-gray-400 text-lg">Top rated spots this week.</p>
+                        </div>
+                        <Link to="/stores">
+                            <button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-full font-bold transition-all text-sm backdrop-blur-sm">
+                                View all stores
+                            </button>
+                        </Link>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {stores.map((store) => (
-                            <div key={store.id} className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg transition-shadow">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="h-12 w-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {stores.length > 0 ? stores.map((store, i) => (
+                            <motion.div
+                                key={store.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="bg-[#1A1A1A] hover:bg-[#222] border border-white/5 p-6 rounded-2xl group cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FFDA1A]/5"
+                            >
+                                <div className="flex justify-between items-start mb-8">
+                                    <div className="h-12 w-12 bg-[#0058A3] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#0058A3]/20 group-hover:scale-110 transition-transform">
                                         <Store className="h-6 w-6" />
                                     </div>
-                                    <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded text-amber-700 font-bold text-sm">
-                                        <Star className="h-3 w-3 fill-current" />
+                                    <div className="flex items-center gap-1.5 bg-[#FFDA1A] text-black px-3 py-1 rounded-full text-sm font-bold shadow-lg shadow-[#FFDA1A]/10">
+                                        <Star className="h-3.5 w-3.5 fill-black" strokeWidth={0} />
                                         {store.rating}
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">{store.name}</h3>
-                                <p className="text-slate-500 text-sm mb-6 line-clamp-2">{store.address}</p>
-                                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                                    <span className="text-xs text-slate-400">{store.ratingCount} reviews</span>
-                                    <Link to="/login">
-                                        <Button size="sm" variant="outline" className="text-xs">
-                                            Login to Rate
-                                        </Button>
+                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#FFDA1A] transition-colors line-clamp-1">{store.name}</h3>
+                                <p className="text-gray-400 text-sm mb-6 line-clamp-2 h-10">{store.address}</p>
+                                <div className="pt-4 border-t border-white/5 flex justify-between items-center">
+                                    <span className="text-xs font-medium text-gray-500">{store.ratingCount} reviews</span>
+                                    <Link to="/login" className="text-sm font-bold text-white group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                                        Rate <ArrowRight className="h-3 w-3" />
                                     </Link>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="mt-12 text-center">
-                        <Link to="/stores">
-                            <Button variant="secondary">View All Stores & Start Rating</Button>
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Grid */}
-            <section className="relative z-10 py-24 bg-white/50 border-y border-slate-200">
-                <div className="container mx-auto px-6">
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <FeatureCard
-                            icon={Star}
-                            title="Honest Ratings"
-                            desc="Submit and view authentic 1-5 star ratings. Help the community make better choices."
-                            color="text-amber-600"
-                            bg="bg-amber-50"
-                        />
-                        <FeatureCard
-                            icon={Shield}
-                            title="Verified Owners"
-                            desc="Store owners are verified to ensure legitimacy and trust within the platform."
-                            color="text-rose-600"
-                            bg="bg-rose-50"
-                        />
-                        <FeatureCard
-                            icon={TrendingUp}
-                            title="Real-time Analytics"
-                            desc="Owners and Admins get powerful insights into store performance and user engagement."
-                            color="text-indigo-600"
-                            bg="bg-indigo-50"
-                        />
+                            </motion.div>
+                        )) : (
+                            // Loading/Empty State placeholders
+                            [1, 2, 3].map((_, i) => (
+                                <div key={i} className="bg-[#1A1A1A] h-64 rounded-2xl animate-pulse border border-white/5" />
+                            ))
+                        )}
                     </div>
                 </div>
             </section>
 
-            {/* Role Showcase */}
-            <section className="relative z-10 py-32 overflow-hidden">
-                <div className="container mx-auto px-6">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                            className="space-y-8"
-                        >
-                            <h2 className="text-4xl font-bold text-slate-900">Empowering Everyone</h2>
-                            <div className="space-y-6">
-                                <RoleItem
-                                    title="For Shoppers"
-                                    desc="Discover top-rated stores in your area. Read reviews and share your own experiences to help others."
-                                    icon={Heart}
-                                    color="bg-rose-100 text-rose-600"
-                                />
-                                <RoleItem
-                                    title="For Store Owners"
-                                    desc="Claim your business, manage your profile, and respond to customer feedback to build trust."
-                                    icon={Store}
-                                    color="bg-orange-100 text-orange-600"
-                                />
-                                <RoleItem
-                                    title="For Administrators"
-                                    desc="Maintain platform integrity with comprehensive tools for managing users and content."
-                                    icon={Shield}
-                                    color="bg-indigo-100 text-indigo-600"
-                                />
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
-                            className="relative"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-tr from-rose-200 to-orange-200 rounded-full blur-[100px] opacity-60" />
-                            <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-white/50 aspect-square flex flex-col justify-center items-center text-center space-y-6 shadow-2xl shadow-rose-900/5">
-                                <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-600 flex items-center justify-center shadow-lg shadow-rose-500/20">
-                                    <Star className="h-12 w-12 text-white fill-white" />
-                                </div>
-                                <div>
-                                    <div className="text-5xl font-bold text-slate-900 mb-2">4.9/5</div>
-                                    <div className="text-slate-500">Average Platform Rating</div>
-                                </div>
-                                <div className="flex -space-x-4 justify-center py-4">
-                                    {[1, 2, 3, 4].map(i => (
-                                        <div key={i} className="h-10 w-10 rounded-full border-2 border-white bg-slate-200" />
-                                    ))}
-                                    <div className="h-10 w-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
-                                        +2k
-                                    </div>
-                                </div>
-                                <p className="text-sm text-slate-500">Join thousands of verified users today</p>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="relative z-10 border-t border-slate-200 bg-white py-12">
-                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="flex items-center gap-2 text-slate-600">
-                        <div className="h-6 w-6 rounded bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
-                            <Store className="h-3 w-3 text-white" />
+            {/* Footer Pre-Section - Yellow Punch */}
+            <section className="py-24 px-6 bg-[#FFDA1A] text-black relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="container mx-auto relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6">
+                            <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
+                                START <br /> RATING.
+                            </h2>
+                            <p className="text-xl font-medium max-w-md">
+                                Join 50,000+ users making their communities better, one review at a time.
+                            </p>
                         </div>
-                        <span className="font-semibold text-slate-900">StoreRate</span>
+                        <div className="flex flex-col sm:flex-row gap-4 lg:justify-end">
+                            <Link to="/signup" className="w-full sm:w-auto">
+                                <button className="w-full sm:w-auto bg-black text-white px-8 py-5 rounded-full font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-2xl shadow-black/10">
+                                    Create Free Account <ArrowRight size={20} />
+                                </button>
+                            </Link>
+                            <Link to="/stores" className="w-full sm:w-auto">
+                                <button className="w-full sm:w-auto bg-white/40 backdrop-blur-md border border-black/10 text-black px-8 py-5 rounded-full font-bold text-lg hover:bg-white/60 transition-colors">
+                                    View Directory
+                                </button>
+                            </Link>
+                        </div>
                     </div>
-                    <div className="text-sm text-slate-500">
-                        © 2024 Roxiler Systems. All rights reserved.
+                </div>
+            </section>
+
+            {/* Footer - Clean & Simple */}
+            <footer className="py-12 bg-white text-gray-500 text-sm border-t border-gray-100">
+                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex items-center gap-2">
+                        <div className="h-6 w-6 bg-black text-[#FFDA1A] rounded-full flex items-center justify-center font-bold text-xs">S</div>
+                        <span className="font-bold text-black">StoreRate.</span>
                     </div>
-                    <div className="flex gap-6">
-                        <a href="#" className="text-slate-500 hover:text-rose-600 transition-colors">Privacy</a>
-                        <a href="#" className="text-slate-500 hover:text-rose-600 transition-colors">Terms</a>
-                        <a href="#" className="text-slate-500 hover:text-rose-600 transition-colors">Contact</a>
+                    <div className="flex gap-8 font-medium">
+                        <a href="#" className="hover:text-black transition-colors">Privacy</a>
+                        <a href="#" className="hover:text-black transition-colors">Terms</a>
+                        <a href="#" className="hover:text-black transition-colors">Twitter</a>
                     </div>
+                    <p>© 2024 Roxiler Systems.</p>
                 </div>
             </footer>
         </div>
     );
 };
-
-const FeatureCard = ({ icon: Icon, title, desc, color, bg }: any) => (
-    <div className="bg-white p-8 rounded-2xl border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-        <div className={`h-12 w-12 rounded-xl flex items-center justify-center mb-6 ${bg} ${color} group-hover:scale-110 transition-transform`}>
-            <Icon className="h-6 w-6" />
-        </div>
-        <h3 className="text-xl font-bold mb-3 text-slate-900">{title}</h3>
-        <p className="text-slate-500 leading-relaxed">{desc}</p>
-    </div>
-);
-
-const RoleItem = ({ title, desc, icon: Icon, color }: any) => (
-    <div className="flex gap-4 group">
-        <div className={`h-12 w-12 shrink-0 rounded-full flex items-center justify-center ${color} transition-colors`}>
-            <Icon className="h-5 w-5" />
-        </div>
-        <div>
-            <h4 className="text-lg font-semibold mb-2 text-slate-900">{title}</h4>
-            <p className="text-slate-500">{desc}</p>
-        </div>
-    </div>
-);
 
 export default LandingPage;

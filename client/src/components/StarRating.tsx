@@ -13,7 +13,7 @@ export const StarRating = ({ rating, onRatingChange, readonly = false, size = 16
     const [hoverRating, setHoverRating] = useState(0);
 
     return (
-        <div className="flex gap-0.5">
+        <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
                 <button
                     key={star}
@@ -23,17 +23,18 @@ export const StarRating = ({ rating, onRatingChange, readonly = false, size = 16
                     onMouseEnter={() => !readonly && setHoverRating(star)}
                     onMouseLeave={() => !readonly && setHoverRating(0)}
                     className={cn(
-                        "transition-colors",
-                        readonly ? "cursor-default" : "cursor-pointer hover:scale-110 transition-transform"
+                        "transition-all duration-200",
+                        readonly ? "cursor-default" : "cursor-pointer hover:scale-110 active:scale-90"
                     )}
                 >
                     <Star
                         size={size}
+                        strokeWidth={2.5}
                         className={cn(
-                            "fill-current transition-colors",
+                            "transition-colors",
                             (hoverRating || rating) >= star
-                                ? "text-amber-400 fill-amber-400"
-                                : "text-slate-300 fill-transparent"
+                                ? "text-[#FFDA1A] fill-[#FFDA1A]"
+                                : "text-gray-200 fill-transparent"
                         )}
                     />
                 </button>

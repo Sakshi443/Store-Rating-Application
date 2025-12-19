@@ -24,6 +24,21 @@ interface StoreData {
     }
 }
 
+interface RawStore {
+    id: number;
+    name: string;
+    address: string;
+    email: string;
+    rating: number;
+    Ratings?: { length: number }[];
+    owner?: {
+        id: number;
+        name: string;
+        email: string;
+        address: string;
+    };
+}
+
 
 interface User {
     id: number;
@@ -70,7 +85,7 @@ const StoreManager = () => {
             if (storeRes.ok) {
                 const data = await storeRes.json();
                 if (isAdmin) {
-                    const adminStores = data.map((s: any) => ({
+                    const adminStores = data.map((s: RawStore) => ({
                         id: s.id,
                         name: s.name,
                         address: s.address,
@@ -178,6 +193,7 @@ const StoreManager = () => {
                 setModalError(data.message || 'Operation failed');
             }
         } catch (error) {
+            console.error(error);
             setModalError('An error occurred');
         }
     };
@@ -205,31 +221,31 @@ const StoreManager = () => {
         (store.owner && store.owner.name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    if (loading) return <div className="text-slate-900 p-8">Loading...</div>;
+    if (loading) return <div className="text-black p-8 font-medium">Loading...</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Store Manager</h2>
-                    <p className="text-slate-500">
+                    <h2 className="text-4xl font-black tracking-tight text-[#111]">Store Manager.</h2>
+                    <p className="text-gray-500 font-medium mt-2">
                         {isAdmin ? 'Manage all system stores and ownership.' : 'Manage your registered stores efficiently.'}
                     </p>
                 </div>
-                <Button onClick={() => handleOpenModal()}>
+                <Button onClick={() => handleOpenModal()} className="bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold border-none shadow-md shadow-[#FFDA1A]/20">
                     <Plus className="mr-2 h-4 w-4" /> Add New Store
                 </Button>
             </div>
 
             {/* Search */}
             <div className="relative max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                     type="text"
                     placeholder={isAdmin ? "Search stores or owners..." : "Search stores..."}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full rounded-md border border-slate-200 bg-white pl-10 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full rounded-md border border-gray-200 bg-white pl-10 pr-4 py-3 text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black transition-all"
                 />
             </div>
 
@@ -243,54 +259,54 @@ const StoreManager = () => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             layout
                         >
-                            <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-all h-full flex flex-col">
+                            <Card className="border-gray-200 bg-white shadow-sm hover:shadow-lg hover:shadow-black/5 transition-all h-full flex flex-col group">
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                                            <div className="h-10 w-10 rounded-lg bg-[#111] flex items-center justify-center text-[#FFDA1A] shadow-sm">
                                                 <Store className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <CardTitle className="text-lg text-slate-900">{store.name}</CardTitle>
-                                                <CardDescription>{store.email}</CardDescription>
+                                                <CardTitle className="text-lg font-bold text-[#111]">{store.name}</CardTitle>
+                                                <CardDescription className="text-gray-500">{store.email}</CardDescription>
                                             </div>
                                         </div>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-between">
                                     <div className="space-y-4 mb-4">
-                                        <div className="text-sm text-slate-500 line-clamp-2 min-h-[40px]">
+                                        <div className="text-sm text-gray-600 line-clamp-2 min-h-[40px] font-medium">
                                             {store.address}
                                         </div>
                                         {isAdmin && store.owner && (
-                                            <div className="mt-2 text-xs text-blue-700 bg-blue-50 p-3 rounded-md space-y-1 border border-blue-100">
-                                                <div className="font-semibold text-blue-800">Owner Details</div>
+                                            <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-3 rounded-md space-y-1 border border-gray-100">
+                                                <div className="font-bold text-black uppercase tracking-wider">Owner Details</div>
                                                 <div className="grid grid-cols-[60px_1fr] gap-1">
-                                                    <span className="text-blue-500">Name:</span>
-                                                    <span className="truncate">{store.owner.name}</span>
-                                                    <span className="text-blue-500">Email:</span>
-                                                    <span className="truncate">{store.owner.email}</span>
-                                                    <span className="text-blue-500">Address:</span>
-                                                    <span className="truncate">{store.owner.address || 'N/A'}</span>
+                                                    <span className="text-gray-400 font-medium">Name:</span>
+                                                    <span className="truncate font-medium">{store.owner.name}</span>
+                                                    <span className="text-gray-400 font-medium">Email:</span>
+                                                    <span className="truncate font-medium">{store.owner.email}</span>
+                                                    <span className="text-gray-400 font-medium">Addr:</span>
+                                                    <span className="truncate font-medium">{store.owner.address || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         )}
 
-                                        <div className="flex items-center justify-between text-sm py-2 border-t border-slate-100">
+                                        <div className="flex items-center justify-between text-sm py-2 border-t border-gray-100">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-slate-400">Rating:</span>
-                                                <span className="font-bold text-amber-500">{store.averageRating || 0} / 5</span>
+                                                <span className="text-gray-400 font-medium">Rating:</span>
+                                                <span className="font-black text-[#111]">{store.averageRating || 0} / 5</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <span className="text-slate-400">Reviews:</span>
-                                                <span className="font-bold text-slate-900">{store.totalRatings || 0}</span>
+                                                <span className="text-gray-400 font-medium">Reviews:</span>
+                                                <span className="font-black text-[#111]">{store.totalRatings || 0}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
                                         <Button
                                             variant="outline"
-                                            className="flex-1"
+                                            className="flex-1 bg-white border-2 border-gray-100 hover:border-black hover:text-black font-bold text-gray-500"
                                             onClick={() => handleOpenModal(store)}
                                         >
                                             <Edit className="mr-2 h-3 w-3" /> Edit
@@ -298,6 +314,7 @@ const StoreManager = () => {
                                         <Button
                                             variant="destructive"
                                             size="icon"
+                                            className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white border-none"
                                             onClick={() => setDeleteId(store.id)}
                                         >
                                             <Trash2 className="h-4 w-4" />
@@ -310,10 +327,10 @@ const StoreManager = () => {
                 </AnimatePresence>
 
                 {filteredStores.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-200 rounded-lg">
-                        <Store className="mx-auto h-12 w-12 opacity-50 mb-4" />
-                        <p className="text-lg">No stores found</p>
-                        <p className="text-sm">Try creating a new store or adjusting your search</p>
+                    <div className="col-span-full py-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-lg">
+                        <Store className="mx-auto h-12 w-12 opacity-20 mb-4" />
+                        <p className="text-lg font-bold">No stores found</p>
+                        <p className="text-sm font-medium">Try creating a new store or adjusting your search</p>
                     </div>
                 )}
             </div>
@@ -325,8 +342,8 @@ const StoreManager = () => {
                 title={editingStore ? 'Edit Store' : 'Create New Store'}
             >
                 <form onSubmit={handleSaveStore} className="space-y-4">
-                    {modalError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{modalError}</div>}
-                    {modalSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{modalSuccess}</div>}
+                    {modalError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100 font-medium">{modalError}</div>}
+                    {modalSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100 font-medium">{modalSuccess}</div>}
 
                     <Input
                         label="Store Name"
@@ -334,6 +351,7 @@ const StoreManager = () => {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Email"
@@ -342,6 +360,7 @@ const StoreManager = () => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Address"
@@ -349,13 +368,14 @@ const StoreManager = () => {
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
 
                     {isAdmin && (
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-700">Assign Owner</label>
+                            <label className="text-sm font-bold text-gray-900">Assign Owner</label>
                             <select
-                                className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
                                 value={formData.ownerId}
                                 onChange={(e) => setFormData({ ...formData, ownerId: e.target.value })}
                                 required={!editingStore}
@@ -367,7 +387,7 @@ const StoreManager = () => {
                                     </option>
                                 ))}
                             </select>
-                            <p className="text-xs text-slate-500">Required for new stores.</p>
+                            <p className="text-xs text-gray-500 font-medium">Required for new stores.</p>
                         </div>
                     )}
 
@@ -376,7 +396,7 @@ const StoreManager = () => {
                         <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">{editingStore ? 'Update Store' : 'Create Store'}</Button>
+                        <Button type="submit" className="bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold">{editingStore ? 'Update Store' : 'Create Store'}</Button>
                     </div>
                 </form>
             </Modal>
@@ -388,14 +408,14 @@ const StoreManager = () => {
                 title="Confirm Deletion"
             >
                 <div className="space-y-4">
-                    <p className="text-slate-600">
+                    <p className="text-gray-600 font-medium">
                         Are you sure you want to delete this store? This action cannot be undone and all associated ratings will be deleted.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">
                         <Button type="button" variant="ghost" onClick={() => setDeleteId(null)}>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDeleteStore}>
+                        <Button variant="destructive" onClick={handleDeleteStore} className="bg-red-600 hover:bg-red-700 text-white font-bold">
                             Delete Store
                         </Button>
                     </div>

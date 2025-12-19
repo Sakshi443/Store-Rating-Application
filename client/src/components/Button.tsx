@@ -4,12 +4,6 @@ import { Loader2 } from "lucide-react";
 
 import { cn } from "../lib/utils";
 
-// Note: We didn't install class-variance-authority, let's stick to simple props or install it.
-// To avoid extra dependencies not approved, I will implement a simpler variant logic without cva for now,
-// or I can just install cva. CVA is very standard.
-// Actually, I didn't ask for CVA in the plan. I'll stick to manual class logic or just basic templates.
-// Let's use flexible string interpolation which is easier without CVA.
-
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: "primary" | "secondary" | "ghost" | "destructive" | "outline";
     size?: "sm" | "md" | "lg" | "icon";
@@ -22,24 +16,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const Comp = asChild ? Slot : "button";
 
         const variants = {
-            primary: "bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-200 border border-blue-500/20",
-            secondary: "bg-white text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-sm",
-            ghost: "hover:bg-slate-100 text-slate-500 hover:text-slate-900",
-            destructive: "bg-red-600 text-white hover:bg-red-500 shadow-sm",
-            outline: "border border-slate-200 bg-transparent hover:bg-slate-50 text-slate-900"
+            primary: "bg-[#FFDA1A] text-black hover:bg-[#e6c417] shadow-md shadow-[#FFDA1A]/20 border border-transparent font-bold",
+            secondary: "bg-white text-black hover:bg-gray-50 border border-gray-200 shadow-sm font-bold",
+            ghost: "hover:bg-gray-100 text-gray-600 hover:text-black font-medium",
+            destructive: "bg-red-600 text-white hover:bg-red-700 shadow-sm font-bold",
+            outline: "border-2 border-gray-200 bg-transparent hover:border-black hover:text-black text-gray-600 font-bold"
         };
 
         const sizes = {
             sm: "h-9 px-3 text-sm",
-            md: "h-11 px-6 text-base",
-            lg: "h-14 px-8 text-lg",
+            md: "h-11 px-6 text-sm",
+            lg: "h-14 px-8 text-base",
             icon: "h-10 w-10 p-2 flex items-center justify-center"
         };
 
         return (
             <Comp
                 className={cn(
-                    "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 active:scale-95 disabled:pointer-events-none disabled:opacity-50",
+                    "inline-flex items-center justify-center rounded-lg transition-all duration-200 active:scale-95 disabled:pointer-events-none disabled:opacity-50",
                     variants[variant],
                     sizes[size],
                     className

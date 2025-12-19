@@ -95,6 +95,7 @@ const StoreOwnerDashboard = () => {
                 setPasswordError(data.message || 'Failed to update password');
             }
         } catch (error) {
+            console.error(error);
             setPasswordError('An error occurred');
         }
     };
@@ -141,32 +142,33 @@ const StoreOwnerDashboard = () => {
                 setStoreError(data.message || 'Failed to register store');
             }
         } catch (error) {
+            console.error(error);
             setStoreError('An error occurred');
         }
     };
 
     const activeStore = stores.find(s => s.id === selectedStoreId) || stores[0];
 
-    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-black p-8 font-medium">Loading dashboard...</div>;
 
     if (stores.length === 0) {
         return (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6 p-4">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome, Store Owner!</h2>
-                    <p className="text-slate-500">Please register your store to start tracking statistics.</p>
+                    <h2 className="text-3xl font-black tracking-tight text-[#111]">Welcome, Store Owner!</h2>
+                    <p className="text-gray-500 font-medium mt-2">Please register your store to start tracking statistics.</p>
                 </div>
 
                 <div className="max-w-md mx-auto w-full mt-8">
-                    <Card className="border-slate-200 bg-white shadow-sm">
+                    <Card className="border-gray-200 bg-white shadow-lg shadow-black/5">
                         <CardHeader>
                             <CardTitle>Register Your Store</CardTitle>
                             <CardDescription>Enter details about your flagship store.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleCreateStore} className="space-y-4">
-                                {storeError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{storeError}</div>}
-                                {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{storeSuccess}</div>}
+                                {storeError && <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md border border-red-100 font-medium">{storeError}</div>}
+                                {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-3 rounded-md border border-green-100 font-medium">{storeSuccess}</div>}
 
                                 <Input
                                     label="Store Name"
@@ -174,6 +176,7 @@ const StoreOwnerDashboard = () => {
                                     value={newStore.name}
                                     onChange={(e) => setNewStore({ ...newStore, name: e.target.value })}
                                     required
+                                    className="bg-gray-50 border-gray-200"
                                 />
                                 <Input
                                     label="Store Email"
@@ -182,6 +185,7 @@ const StoreOwnerDashboard = () => {
                                     value={newStore.email}
                                     onChange={(e) => setNewStore({ ...newStore, email: e.target.value })}
                                     required
+                                    className="bg-gray-50 border-gray-200"
                                 />
                                 <Input
                                     label="Store Address"
@@ -189,15 +193,16 @@ const StoreOwnerDashboard = () => {
                                     value={newStore.address}
                                     onChange={(e) => setNewStore({ ...newStore, address: e.target.value })}
                                     required
+                                    className="bg-gray-50 border-gray-200"
                                 />
-                                <Button type="submit" className="w-full">Register Store</Button>
+                                <Button type="submit" className="w-full bg-[#FFDA1A] hover:bg-[#e6c417] text-black font-bold">Register Store</Button>
                             </form>
                         </CardContent>
                     </Card>
                 </div>
 
                 <div className="absolute top-8 right-8">
-                    <Button variant="secondary" onClick={() => setShowPasswordModal(true)}>
+                    <Button variant="secondary" onClick={() => setShowPasswordModal(true)} className="bg-gray-100 hover:bg-gray-200 text-black border-none">
                         <Lock className="mr-2 h-4 w-4" /> Change Password
                     </Button>
                 </div>
@@ -229,7 +234,7 @@ const StoreOwnerDashboard = () => {
                             <Button type="button" variant="ghost" onClick={() => setShowPasswordModal(false)}>
                                 Cancel
                             </Button>
-                            <Button type="submit">Update Password</Button>
+                            <Button type="submit" className="bg-black text-white hover:bg-gray-800">Update Password</Button>
                         </div>
                     </form>
                 </Modal>
@@ -241,14 +246,14 @@ const StoreOwnerDashboard = () => {
         <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Store Dashboard</h2>
-                    <p className="text-slate-500">Monitor your store performance and ratings.</p>
+                    <h2 className="text-4xl font-black tracking-tight text-[#111]">Store Dashboard.</h2>
+                    <p className="text-gray-500 font-medium mt-2">Monitor your store performance and ratings.</p>
                 </div>
-                <div className="flex gap-2">
-                    <Button onClick={() => setShowStoreModal(true)}>
+                <div className="flex gap-3">
+                    <Button onClick={() => setShowStoreModal(true)} className="bg-[#FFDA1A] hover:bg-[#e6c417] text-black font-bold border-none shadow-md shadow-[#FFDA1A]/20">
                         <Plus className="mr-2 h-4 w-4" /> Register Store
                     </Button>
-                    <Button variant="secondary" onClick={() => setShowPasswordModal(true)}>
+                    <Button variant="secondary" onClick={() => setShowPasswordModal(true)} className="bg-gray-100 hover:bg-gray-200 text-black border-none">
                         <Lock className="mr-2 h-4 w-4" /> Change Password
                     </Button>
                 </div>
@@ -261,9 +266,9 @@ const StoreOwnerDashboard = () => {
                         <button
                             key={store.id}
                             onClick={() => setSelectedStoreId(store.id)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${store.id === activeStore.id
-                                ? 'bg-blue-600 text-white shadow-md'
-                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                            className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${store.id === activeStore.id
+                                ? 'bg-black text-white shadow-lg'
+                                : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:text-black'
                                 }`}
                         >
                             {store.name}
@@ -272,94 +277,104 @@ const StoreOwnerDashboard = () => {
                 </div>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="border-slate-200 bg-white shadow-sm">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <Card className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-500">
+                        <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Average Rating
                         </CardTitle>
-                        <Star className="h-4 w-4 text-amber-400" />
+                        <div className="h-8 w-8 rounded-full bg-[#FFDA1A]/20 flex items-center justify-center">
+                            <Star className="h-4 w-4 text-black fill-black" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{activeStore.averageRating} / 5</div>
-                        <p className="text-xs text-slate-500">Based on {activeStore.totalRatings} reviews</p>
+                        <div className="text-3xl font-black text-[#111]">{activeStore.averageRating} / 5</div>
+                        <p className="text-xs font-medium text-gray-500 mt-1">Based on {activeStore.totalRatings} reviews</p>
                     </CardContent>
                 </Card>
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-500">
+                        <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                             Total Reviews
                         </CardTitle>
-                        <TrendingUp className="h-4 w-4 text-slate-400" />
+                        <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                            <TrendingUp className="h-4 w-4 text-black" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{activeStore.totalRatings}</div>
-                        <p className="text-xs text-slate-500">Total feedback received</p>
+                        <div className="text-3xl font-black text-[#111]">{activeStore.totalRatings}</div>
+                        <p className="text-xs font-medium text-gray-500 mt-1">Total feedback received</p>
                     </CardContent>
                 </Card>
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-500">
+                        <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                             5-Star Ratings
                         </CardTitle>
-                        <Star className="h-4 w-4 text-green-400" />
+                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                            <Star className="h-4 w-4 text-green-600 fill-green-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{activeStore.ratingCounts[5] || 0}</div>
-                        <p className="text-xs text-slate-500">Happy customers</p>
+                        <div className="text-3xl font-black text-[#111]">{activeStore.ratingCounts[5] || 0}</div>
+                        <p className="text-xs font-medium text-gray-500 mt-1">Happy customers</p>
                     </CardContent>
                 </Card>
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-500">
+                        <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                             1-Star Ratings
                         </CardTitle>
-                        <Star className="h-4 w-4 text-red-400" />
+                        <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
+                            <Star className="h-4 w-4 text-red-600 fill-red-600" />
+                        </div>
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-slate-900">{activeStore.ratingCounts[1] || 0}</div>
-                        <p className="text-xs text-slate-500">Areas to improve</p>
+                        <div className="text-3xl font-black text-[#111]">{activeStore.ratingCounts[1] || 0}</div>
+                        <p className="text-xs font-medium text-gray-500 mt-1">Areas to improve</p>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card className="border-slate-200 bg-white shadow-sm">
+            <Card className="border-gray-200 bg-white shadow-sm">
                 <CardHeader>
                     <div className="flex justify-between items-center">
-                        <div>
-                            <CardTitle>Recent Reviews</CardTitle>
+                        <div className="space-y-1">
+                            <CardTitle className="text-xl font-bold">Recent Reviews</CardTitle>
                             <CardDescription>
-                                Recent ratings and feedback for {activeStore.name}.
+                                Recent ratings and feedback for <span className="font-semibold text-black">{activeStore.name}</span>.
                             </CardDescription>
                         </div>
                     </div>
                 </CardHeader>
                 <CardContent>
                     {activeStore.reviews && activeStore.reviews.length > 0 ? (
-                        <div className="space-y-4">
+                        <div className="grid gap-4">
                             {activeStore.reviews.map((review) => (
-                                <div key={review.id} className="flex items-center justify-between p-4 rounded-lg bg-slate-50 border border-slate-200">
+                                <div key={review.id} className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-gray-200 transition-colors">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                                        <div className="h-10 w-10 rounded-full bg-[#FFDA1A] flex items-center justify-center text-black font-bold shadow-sm">
                                             {review.user.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
-                                            <p className="font-medium text-slate-900">{review.user}</p>
-                                            <p className="text-xs text-slate-500">{new Date(review.date).toLocaleDateString()}</p>
+                                            <p className="font-bold text-[#111]">{review.user}</p>
+                                            <p className="text-xs font-medium text-gray-500">{new Date(review.date).toLocaleDateString()}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1 text-amber-500">
-                                        <Star className="h-4 w-4 fill-current" />
-                                        <span className="font-bold">{review.score}</span>
+                                    <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-gray-200">
+                                        <Star className="h-3.5 w-3.5 fill-[#FFDA1A] text-[#FFDA1A]" />
+                                        <span className="font-bold text-sm">{review.score}</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
-                            <div className="text-center text-slate-500">
-                                <Star className="mx-auto h-8 w-8 opacity-50 mb-2" />
-                                <p>No reviews yet.</p>
+                        <div className="flex h-[200px] items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50/50">
+                            <div className="text-center text-gray-500">
+                                <div className="bg-white p-3 rounded-full inline-flex mb-3 shadow-sm">
+                                    <Star className="h-6 w-6 text-gray-300" />
+                                </div>
+                                <p className="font-medium">No reviews yet.</p>
                             </div>
                         </div>
                     )}
@@ -373,8 +388,8 @@ const StoreOwnerDashboard = () => {
                 title="Change Password"
             >
                 <form onSubmit={handleChangePassword} className="space-y-4">
-                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{passwordError}</div>}
-                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{passwordSuccess}</div>}
+                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-100">{passwordError}</div>}
+                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-3 rounded border border-green-100">{passwordSuccess}</div>}
 
                     <Input
                         label="Current Password"
@@ -382,6 +397,7 @@ const StoreOwnerDashboard = () => {
                         value={passwordData.currentPassword}
                         onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="New Password"
@@ -389,12 +405,13 @@ const StoreOwnerDashboard = () => {
                         value={passwordData.newPassword}
                         onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <div className="flex justify-end gap-2 pt-4">
                         <Button type="button" variant="ghost" onClick={() => setShowPasswordModal(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Update Password</Button>
+                        <Button type="submit" className="bg-black text-white hover:bg-gray-900">Update Password</Button>
                     </div>
                 </form>
             </Modal>
@@ -406,8 +423,8 @@ const StoreOwnerDashboard = () => {
                 title="Register New Store"
             >
                 <form onSubmit={handleCreateStore} className="space-y-4">
-                    {storeError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{storeError}</div>}
-                    {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{storeSuccess}</div>}
+                    {storeError && <div className="text-red-600 text-sm bg-red-50 p-3 rounded border border-red-100">{storeError}</div>}
+                    {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-3 rounded border border-green-100">{storeSuccess}</div>}
 
                     <Input
                         label="Store Name"
@@ -415,6 +432,7 @@ const StoreOwnerDashboard = () => {
                         value={newStore.name}
                         onChange={(e) => setNewStore({ ...newStore, name: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Email"
@@ -423,6 +441,7 @@ const StoreOwnerDashboard = () => {
                         value={newStore.email}
                         onChange={(e) => setNewStore({ ...newStore, email: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Address"
@@ -430,12 +449,13 @@ const StoreOwnerDashboard = () => {
                         value={newStore.address}
                         onChange={(e) => setNewStore({ ...newStore, address: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <div className="flex justify-end gap-2 pt-4">
                         <Button type="button" variant="ghost" onClick={() => setShowStoreModal(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Register Store</Button>
+                        <Button type="submit" className="bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold">Register Store</Button>
                     </div>
                 </form>
             </Modal>

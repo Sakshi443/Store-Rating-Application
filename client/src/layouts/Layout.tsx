@@ -51,13 +51,10 @@ export default function Layout() {
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-hidden">
-            {/* Background Gradients */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-rose-200/40 rounded-full blur-[120px]" />
-                <div className="absolute top-[40%] left-[40%] w-[400px] h-[400px] bg-amber-100/40 rounded-full blur-[100px]" />
-            </div>
+        <div className="min-h-screen bg-white text-black selection:bg-[#FFDA1A] selection:text-black overflow-hidden font-sans">
+            {/* Background - Clean White/Gray, no gradients */}
+            <div className="fixed inset-0 z-0 bg-gray-50/50 pointer-events-none" />
+
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
@@ -65,7 +62,7 @@ export default function Layout() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm lg:hidden"
+                        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm lg:hidden"
                         onClick={() => setIsMobileMenuOpen(false)}
                     />
                 )}
@@ -74,24 +71,24 @@ export default function Layout() {
             {/* Sidebar - Desktop & Mobile */}
             <motion.aside
                 className={cn(
-                    "fixed top-0 left-0 z-50 h-full w-72 border-r border-slate-200 bg-white/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0",
+                    "fixed top-0 left-0 z-50 h-full w-72 border-r border-gray-200 bg-white transition-transform duration-300 lg:translate-x-0 ease-in-out font-medium",
                     isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
                 <div className="flex h-full flex-col">
                     {/* Logo */}
-                    <div className="flex h-16 items-center justify-between border-b border-slate-200 px-6">
-                        <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 shadow-lg shadow-blue-200">
-                                <span className="text-white">R</span>
+                    <div className="flex h-20 items-center justify-between border-b border-gray-100 px-8">
+                        <Link to="/dashboard" className="flex items-center gap-3 font-black text-xl tracking-tighter text-black hover:opacity-80 transition-opacity">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#111]">
+                                <span className="text-[#FFDA1A] font-bold">S</span>
                             </div>
-                            <span className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-                                Roxiler
+                            <span>
+                                StoreRate.
                             </span>
                         </Link>
                         <button
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="lg:hidden text-slate-500 hover:text-slate-900"
+                            className="lg:hidden text-gray-400 hover:text-black transition-colors"
                         >
                             <X size={20} />
                         </button>
@@ -99,15 +96,13 @@ export default function Layout() {
 
                     {/* User Info */}
                     <div className="p-6">
-                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                            <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                                    <User size={20} />
-                                </div>
-                                <div className="overflow-hidden">
-                                    <p className="truncate font-medium text-slate-900">{user?.email}</p>
-                                    <p className="truncate text-xs text-slate-500">{user?.role}</p>
-                                </div>
+                        <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-gray-200 text-black shadow-sm">
+                                <User size={18} strokeWidth={2.5} />
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="truncate font-bold text-sm text-[#111]">{user?.email?.split('@')[0]}</p>
+                                <p className="truncate text-[10px] uppercase tracking-wider font-bold text-gray-400">{user?.role}</p>
                             </div>
                         </div>
                     </div>
@@ -124,13 +119,13 @@ export default function Layout() {
                                     to={item.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={cn(
-                                        "group flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200",
+                                        "group flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold transition-all duration-200",
                                         isActive
-                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                                            ? "bg-[#FFDA1A] text-black shadow-md shadow-[#FFDA1A]/20"
+                                            : "text-gray-500 hover:bg-gray-100 hover:text-black"
                                     )}
                                 >
-                                    <Icon size={18} className={cn("transition-colors", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
+                                    <Icon size={18} strokeWidth={2.5} className={cn("transition-colors", isActive ? "text-black" : "text-gray-400 group-hover:text-black")} />
                                     {item.label}
                                 </Link>
                             );
@@ -138,13 +133,13 @@ export default function Layout() {
                     </nav>
 
                     {/* Logout */}
-                    <div className="border-t border-slate-200 p-4">
+                    <div className="border-t border-gray-100 p-4">
                         <Button
                             variant="ghost"
-                            className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700"
+                            className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold"
                             onClick={handleLogout}
                         >
-                            <LogOut size={18} />
+                            <LogOut size={18} strokeWidth={2.5} />
                             Sign Out
                         </Button>
                     </div>
@@ -154,20 +149,20 @@ export default function Layout() {
             {/* Main Content */}
             <div className="lg:pl-72 relative z-10">
                 {/* Topbar - Mobile Only */}
-                <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-xl lg:hidden">
+                <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200 bg-white/80 px-4 backdrop-blur-xl lg:hidden">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+                            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-black transition-colors"
                         >
-                            <Menu size={20} />
+                            <Menu size={24} />
                         </button>
-                        <span className="font-semibold text-slate-900">Roxiler Systems</span>
+                        <span className="font-black text-lg tracking-tight text-[#111]">StoreRate.</span>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <main className="p-4 lg:p-8">
+                <main className="p-4 lg:p-8 min-h-[calc(100vh-4rem)]">
                     <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <Outlet />
                     </div>

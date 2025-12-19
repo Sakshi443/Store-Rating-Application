@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ReactLenis } from 'lenis/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -34,44 +35,46 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: ReactNode, allow
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/stores" element={<StoresPage />} />
+      <ReactLenis root>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/stores" element={<StoresPage />} />
 
-          {/* Protected Routes with Layout */}
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={
-              <ProtectedRoute allowedRoles={['Normal User', 'System Administrator']}>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
+            {/* Protected Routes with Layout */}
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={
+                <ProtectedRoute allowedRoles={['Normal User', 'System Administrator']}>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={['System Administrator']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
+              <Route path="/admin" element={
+                <ProtectedRoute allowedRoles={['System Administrator']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/owner" element={
-              <ProtectedRoute allowedRoles={['Store Owner', 'System Administrator']}>
-                <StoreOwnerDashboard />
-              </ProtectedRoute>
-            } />
+              <Route path="/owner" element={
+                <ProtectedRoute allowedRoles={['Store Owner', 'System Administrator']}>
+                  <StoreOwnerDashboard />
+                </ProtectedRoute>
+              } />
 
-            <Route path="/owner/manage" element={
-              <ProtectedRoute allowedRoles={['Store Owner', 'System Administrator']}>
-                <StoreManager />
-              </ProtectedRoute>
-            } />
-          </Route>
+              <Route path="/owner/manage" element={
+                <ProtectedRoute allowedRoles={['Store Owner', 'System Administrator']}>
+                  <StoreManager />
+                </ProtectedRoute>
+              } />
+            </Route>
 
-          {/* Default Redirect */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </Router>
+            {/* Default Redirect */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Router>
+      </ReactLenis>
     </AuthProvider>
   );
 }

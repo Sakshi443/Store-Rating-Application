@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/Card';
 import config from '../config';
 import { Button } from '../components/Button';
-import { Plus, Search, MoreHorizontal, Users, Activity, Store as StoreIcon } from 'lucide-react';
+import { Plus, Search, MoreHorizontal, Users, Activity, Store as StoreIcon, Settings, Trash2 } from 'lucide-react';
 import { Input } from '../components/Input';
 import { Modal } from '../components/Modal';
 import { validateName, validateEmail, validatePassword, validateAddress } from '../lib/validation';
@@ -57,7 +57,6 @@ const AdminDashboard = () => {
     const [newUser, setNewUser] = useState({ name: '', email: '', password: '', address: '', role: 'Normal User' });
     const [userFormError, setUserFormError] = useState('');
 
-    // Add Store Form State
     // Add Store Form State
     const [editingStoreId, setEditingStoreId] = useState<number | null>(null);
     const [newStore, setNewStore] = useState({ name: '', email: '', address: '', ownerId: '' });
@@ -135,6 +134,7 @@ const AdminDashboard = () => {
                 setUserFormError(data.message || 'Failed to create user');
             }
         } catch (error) {
+            console.error(error);
             setUserFormError('An error occurred');
         }
     };
@@ -188,6 +188,7 @@ const AdminDashboard = () => {
                 setStoreFormError(data.message || 'Failed to save store');
             }
         } catch (error) {
+            console.error(error);
             setStoreFormError('An error occurred');
         }
     };
@@ -225,13 +226,13 @@ const AdminDashboard = () => {
 
     const storeOwners = users.filter(u => u.role === 'Store Owner');
 
-    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-black p-8 font-medium">Loading dashboard...</div>;
 
     const statCards = [
-        { title: "Total Ratings", value: stats?.totalRatings || 0, icon: Activity, color: "text-green-400" },
-        { title: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-blue-400" },
-        { title: "Total Stores", value: stats?.totalStores || 0, icon: StoreIcon, color: "text-purple-400" },
-        { title: "Active Users", value: stats?.activeUsers || 0, icon: Activity, color: "text-orange-400" },
+        { title: "Total Ratings", value: stats?.totalRatings || 0, icon: Activity, color: "text-green-600 bg-green-100" },
+        { title: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-blue-600 bg-blue-100" },
+        { title: "Total Stores", value: stats?.totalStores || 0, icon: StoreIcon, color: "text-purple-600 bg-purple-100" },
+        { title: "Active Users", value: stats?.activeUsers || 0, icon: Activity, color: "text-orange-600 bg-orange-100" },
     ];
 
     return (
@@ -239,71 +240,81 @@ const AdminDashboard = () => {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Admin Dashboard</h2>
-                    <p className="text-slate-500">Manage users, stores, and system settings.</p>
+                    <h2 className="text-4xl font-black tracking-tight text-[#111]">Admin Dashboard.</h2>
+                    <p className="text-gray-500 font-medium mt-2">Manage users, stores, and system settings.</p>
                 </div>
                 {activeTab === 'users' ? (
-                    <Button onClick={() => setShowAddUser(true)} className="w-full sm:w-auto">
+                    <Button onClick={() => setShowAddUser(true)} className="w-full sm:w-auto bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold border-none">
                         <Plus className="mr-2 h-4 w-4" /> Add User
                     </Button>
-                ) : null}
+                ) : (
+                    <Button onClick={() => { setEditingStoreId(null); setShowAddStore(true); }} className="w-full sm:w-auto bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold border-none">
+                        <Plus className="mr-2 h-4 w-4" /> Add Store
+                    </Button>
+                )}
             </div>
 
             {/* Stats */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {statCards.map((stat, index) => (
-                    <Card key={index} className="border-slate-200 bg-white shadow-sm">
+                    <Card key={index} className="border-gray-200 bg-white shadow-sm hover:shadow-md transition-all">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-500">
+                            <CardTitle className="text-sm font-bold text-gray-500 uppercase tracking-wider">
                                 {stat.title}
                             </CardTitle>
-                            <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                            <div className={`p-2 rounded-lg ${stat.color}`}>
+                                <stat.icon className="h-4 w-4" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+                            <div className="text-3xl font-black text-[#111]">{stat.value}</div>
                         </CardContent>
                     </Card>
                 ))}
             </div>
 
             {/* Tabs & Content */}
-            <div className="space-y-4">
-                <div className="flex space-x-2 border-b border-slate-200 pb-2">
+            <div className="space-y-6">
+                <div className="flex border-b border-gray-200">
                     <button
                         onClick={() => setActiveTab('users')}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'users' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-900'}`}
+                        className={`px-6 py-3 text-sm font-bold transition-all relative ${activeTab === 'users' ? 'text-black' : 'text-gray-400 hover:text-black'
+                            }`}
                     >
                         Users
+                        {activeTab === 'users' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FFDA1A]" />}
                     </button>
                     <button
                         onClick={() => setActiveTab('stores')}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'stores' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-900'}`}
+                        className={`px-6 py-3 text-sm font-bold transition-all relative ${activeTab === 'stores' ? 'text-black' : 'text-gray-400 hover:text-black'
+                            }`}
                     >
                         Stores
+                        {activeTab === 'stores' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FFDA1A]" />}
                     </button>
                 </div>
 
-                <Card className="border-slate-200 bg-white shadow-sm">
+                <Card className="border-gray-200 bg-white shadow-sm">
                     <CardHeader>
-                        <CardTitle>{activeTab === 'users' ? 'Users' : 'Store Manager'}</CardTitle>
+                        <CardTitle className="text-xl font-bold">{activeTab === 'users' ? 'User Management' : 'Store Management'}</CardTitle>
                         <CardDescription>
-                            {activeTab === 'users' ? 'Manage registered users.' : 'Detailed view of stores and their owners.'}
+                            {activeTab === 'users' ? 'View and manage registered users.' : 'View and manage registered stores.'}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+                        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
                             <div className="relative w-full sm:max-w-sm">
                                 <Input
                                     placeholder="Search..."
                                     icon={Search}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full"
+                                    className="w-full bg-gray-50 border-gray-200"
                                 />
                             </div>
                             {activeTab === 'users' && (
                                 <select
-                                    className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="h-10 rounded-md border border-gray-200 bg-gray-50 px-3 text-sm text-black font-medium focus:outline-none focus:ring-2 focus:ring-black"
                                     value={roleFilter}
                                     onChange={(e) => setRoleFilter(e.target.value)}
                                 >
@@ -315,51 +326,46 @@ const AdminDashboard = () => {
                             )}
                         </div>
 
-                        <div className="overflow-x-auto rounded-lg border border-slate-200">
-                            <table className="w-full text-left text-sm text-slate-500">
-                                <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                        <div className="overflow-x-auto rounded-lg border border-gray-200">
+                            <table className="w-full text-left text-sm text-gray-500">
+                                <thead className="bg-gray-50 text-xs uppercase text-gray-500 font-bold tracking-wider">
                                     <tr>
                                         {activeTab === 'users' ? (
                                             <>
-                                                <th className="px-6 py-3">Name</th>
-                                                <th className="px-6 py-3">Email</th>
-                                                <th className="px-6 py-3">Address</th>
-                                                <th className="px-6 py-3">Role</th>
-                                                <th className="px-6 py-3">Rating</th>
-                                                <th className="px-6 py-3 text-right">Actions</th>
+                                                <th className="px-6 py-4">Name</th>
+                                                <th className="px-6 py-4">Email</th>
+                                                <th className="px-6 py-4">Address</th>
+                                                <th className="px-6 py-4">Role</th>
+                                                <th className="px-6 py-4">Actions</th>
                                             </>
                                         ) : (
                                             <>
-                                                <th className="px-6 py-3">Store Details</th>
-                                                <th className="px-6 py-3">Owner Details</th>
-                                                <th className="px-6 py-3">Rating</th>
+                                                <th className="px-6 py-4">Store Details</th>
+                                                <th className="px-6 py-4">Owner</th>
+                                                <th className="px-6 py-4">Rating</th>
+                                                <th className="px-6 py-4 text-right">Actions</th>
                                             </>
                                         )}
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-gray-100">
                                     {activeTab === 'users' ? (
                                         filteredUsers.length > 0 ? (
                                             filteredUsers.map((user) => (
-                                                <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                                    <td className="px-6 py-4 font-medium text-slate-900">{user.name}</td>
-                                                    <td className="px-6 py-4">{user.email}</td>
+                                                <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                                                    <td className="px-6 py-4 font-bold text-[#111]">{user.name}</td>
+                                                    <td className="px-6 py-4 font-medium">{user.email}</td>
                                                     <td className="px-6 py-4">{user.address || '-'}</td>
                                                     <td className="px-6 py-4">
-                                                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${user.role === 'System Administrator' ? 'bg-purple-100 text-purple-700' :
+                                                        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${user.role === 'System Administrator' ? 'bg-purple-100 text-purple-700' :
                                                             user.role === 'Store Owner' ? 'bg-blue-100 text-blue-700' :
-                                                                'bg-slate-100 text-slate-700'
+                                                                'bg-gray-100 text-gray-700'
                                                             }`}>
                                                             {user.role}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4">
-                                                        {user.rating ? (
-                                                            <span className="text-amber-500 font-bold">★ {user.rating}</span>
-                                                        ) : '-'}
-                                                    </td>
-                                                    <td className="px-6 py-4 text-right">
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-black">
                                                             <MoreHorizontal className="h-4 w-4" />
                                                         </Button>
                                                     </td>
@@ -367,34 +373,65 @@ const AdminDashboard = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={6} className="px-6 py-4 text-center">No users found.</td>
+                                                <td colSpan={6} className="px-6 py-8 text-center text-gray-400 font-medium">No users found.</td>
                                             </tr>
                                         )
                                     ) : (
                                         filteredStores.length > 0 ? (
                                             filteredStores.map((store) => (
-                                                <tr key={store.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                                <tr key={store.id} className="hover:bg-gray-50/50 transition-colors">
                                                     <td className="px-6 py-4">
-                                                        <div className="font-medium text-slate-900">{store.name}</div>
-                                                        <div className="text-xs">{store.address}</div>
+                                                        <div className="font-bold text-[#111]">{store.name}</div>
+                                                        <div className="text-xs text-gray-500">{store.address}</div>
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         {store.owner ? (
-                                                            <>
-                                                                <div className="text-slate-900">{store.owner.name}</div>
-                                                                <div className="text-xs">{store.owner.email}</div>
-                                                                <div className="text-xs text-slate-500">{store.owner.address}</div>
-                                                            </>
-                                                        ) : <span className="text-slate-400">Unknown</span>}
+                                                            <div>
+                                                                <div className="font-medium text-[#111]">{store.owner.name}</div>
+                                                                <div className="text-xs text-gray-500">{store.owner.email}</div>
+                                                            </div>
+                                                        ) : <span className="text-gray-400 italic">Unknown</span>}
                                                     </td>
-                                                    <td className="px-6 py-4 text-amber-500 font-bold">
-                                                        ★ {store.rating || 0}
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-1 font-bold text-[#111]">
+                                                            <span>{store.rating || 0}</span>
+                                                            <Activity className="h-3 w-3 text-[#FFDA1A]" />
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <div className="flex justify-end gap-2">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 text-gray-400 hover:text-black hover:bg-gray-100"
+                                                                onClick={() => {
+                                                                    setEditingStoreId(store.id);
+                                                                    setNewStore({
+                                                                        name: store.name,
+                                                                        email: store.email,
+                                                                        address: store.address,
+                                                                        ownerId: store.owner ? store.owner.id.toString() : ''
+                                                                    });
+                                                                    setShowAddStore(true);
+                                                                }}
+                                                            >
+                                                                <Settings className="h-4 w-4" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                                                                onClick={() => setDeleteStoreId(store.id)}
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={3} className="px-6 py-4 text-center">No stores found.</td>
+                                                <td colSpan={4} className="px-6 py-8 text-center text-gray-400 font-medium">No stores found.</td>
                                             </tr>
                                         )
                                     )}
@@ -418,6 +455,7 @@ const AdminDashboard = () => {
                         value={newUser.name}
                         onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Email"
@@ -425,6 +463,7 @@ const AdminDashboard = () => {
                         value={newUser.email}
                         onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Password"
@@ -432,16 +471,18 @@ const AdminDashboard = () => {
                         value={newUser.password}
                         onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Address"
                         value={newUser.address}
                         onChange={(e) => setNewUser({ ...newUser, address: e.target.value })}
+                        className="bg-gray-50"
                     />
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Role</label>
+                        <label className="text-sm font-bold text-gray-900">Role</label>
                         <select
-                            className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
                             value={newUser.role}
                             onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                         >
@@ -454,7 +495,7 @@ const AdminDashboard = () => {
                         <Button type="button" variant="ghost" onClick={() => setShowAddUser(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">Create User</Button>
+                        <Button type="submit" className="bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold">Create User</Button>
                     </div>
                 </form>
             </Modal>
@@ -473,6 +514,7 @@ const AdminDashboard = () => {
                         value={newStore.name}
                         onChange={(e) => setNewStore({ ...newStore, name: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Email"
@@ -480,18 +522,20 @@ const AdminDashboard = () => {
                         value={newStore.email}
                         onChange={(e) => setNewStore({ ...newStore, email: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
                     <Input
                         label="Store Address"
                         value={newStore.address}
                         onChange={(e) => setNewStore({ ...newStore, address: e.target.value })}
                         required
+                        className="bg-gray-50"
                     />
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Assign Owner</label>
+                        <label className="text-sm font-bold text-gray-900">Assign Owner</label>
                         <select
-                            className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black"
                             value={newStore.ownerId}
                             onChange={(e) => setNewStore({ ...newStore, ownerId: e.target.value })}
                             required
@@ -503,7 +547,7 @@ const AdminDashboard = () => {
                                 </option>
                             ))}
                         </select>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-gray-500">
                             Only users with 'Store Owner' role are listed.
                         </p>
                     </div>
@@ -512,7 +556,7 @@ const AdminDashboard = () => {
                         <Button type="button" variant="ghost" onClick={() => setShowAddStore(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit">{editingStoreId ? "Update Store" : "Create Store"}</Button>
+                        <Button type="submit" className="bg-[#FFDA1A] text-black hover:bg-[#e6c417] font-bold">{editingStoreId ? "Update Store" : "Create Store"}</Button>
                     </div>
                 </form>
             </Modal>
@@ -524,14 +568,14 @@ const AdminDashboard = () => {
                 title="Confirm Deletion"
             >
                 <div className="space-y-4">
-                    <p className="text-slate-600">
+                    <p className="text-gray-600 font-medium">
                         Are you sure you want to delete this store? This action cannot be undone.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">
                         <Button type="button" variant="ghost" onClick={() => setDeleteStoreId(null)}>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDeleteStore}>
+                        <Button variant="destructive" onClick={handleDeleteStore} className="bg-red-600 hover:bg-red-700 text-white font-bold">
                             Delete Store
                         </Button>
                     </div>
