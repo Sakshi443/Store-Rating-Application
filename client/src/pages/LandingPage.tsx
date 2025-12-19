@@ -98,9 +98,9 @@ const LandingPage = () => {
                                     Create Free Account
                                 </Button>
                             </Link>
-                            <Link to="/login">
+                            <Link to="/stores">
                                 <Button size="lg" variant="secondary" className="h-14 px-8 text-lg bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-sm">
-                                    Explore Stores
+                                    Browse Stores
                                 </Button>
                             </Link>
                         </div>
@@ -183,7 +183,7 @@ const LandingPage = () => {
                     </div>
 
                     <div className="mt-12 text-center">
-                        <Link to="/signup">
+                        <Link to="/stores">
                             <Button variant="secondary">View All Stores & Start Rating</Button>
                         </Link>
                     </div>

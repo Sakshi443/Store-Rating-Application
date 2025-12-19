@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import StoresPage from './pages/StoresPage';
 import AdminDashboard from './pages/AdminDashboard';
 import StoreOwnerDashboard from './pages/StoreOwnerDashboard';
 import StoreManager from './pages/StoreManager';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/stores" element={<StoresPage />} />
 
           {/* Protected Routes with Layout */}
           <Route element={<Layout />}>
