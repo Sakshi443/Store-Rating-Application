@@ -10,6 +10,9 @@ const Store = sequelize.define('Store', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            len: [20, 60]
+        }
     },
     email: {
         type: DataTypes.STRING,

@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, AlertCircle, Building, Shield } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, AlertCircle, Building } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/Card';
 import { motion } from 'framer-motion';
+import { validateName, validateAddress, validateEmail, validatePassword } from '../lib/validation';
 
 const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('Normal User');
+    const [role] = useState('Normal User');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { signup } = useAuth();
@@ -23,7 +24,17 @@ const Signup = () => {
         setError('');
         setLoading(true);
         try {
-            if (name.length < 2) throw new Error("Name must be at least 2 characters long.");
+            const nameError = validateName(name);
+            if (nameError) throw new Error(nameError);
+
+            const emailError = validateEmail(email);
+            if (emailError) throw new Error(emailError);
+
+            const addressError = validateAddress(address);
+            if (addressError) throw new Error(addressError);
+
+            const passwordError = validatePassword(password);
+            if (passwordError) throw new Error(passwordError);
             await signup(email, password, role, name, address);
             navigate('/dashboard');
         } catch (err: any) {
@@ -138,26 +149,7 @@ const Signup = () => {
                                         />
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Role</label>
-                                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                                            {['Normal User', 'Store Owner', 'System Administrator'].map((r) => (
-                                                <div
-                                                    key={r}
-                                                    onClick={() => setRole(r)}
-                                                    className={`cursor-pointer rounded-lg border p-3 text-center text-xs font-medium transition-all ${role === r
-                                                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/20'
-                                                        : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-white'
-                                                        }`}
-                                                >
-                                                    {r === 'Normal User' && <User className="mx-auto mb-1 h-5 w-5" />}
-                                                    {r === 'Store Owner' && <Building className="mx-auto mb-1 h-5 w-5" />}
-                                                    {r === 'System Administrator' && <Shield className="mx-auto mb-1 h-5 w-5" />}
-                                                    {r}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                    {/* Role selection removed using a fixed 'Normal User' role */}
                                 </CardContent>
 
                                 <CardFooter className="flex flex-col gap-4">

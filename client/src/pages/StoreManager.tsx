@@ -7,6 +7,7 @@ import { Input } from '../components/Input';
 import { Edit, Trash2, Plus, Store, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { validateName, validateAddress, validateEmail } from '../lib/validation';
 
 interface StoreData {
     id: number;
@@ -126,6 +127,24 @@ const StoreManager = () => {
 
         if (!formData.name || !formData.address || !formData.email) {
             setModalError('All fields are required');
+            return;
+        }
+
+        const nameError = validateName(formData.name);
+        if (nameError) {
+            setModalError(nameError);
+            return;
+        }
+
+        const emailError = validateEmail(formData.email);
+        if (emailError) {
+            setModalError(emailError);
+            return;
+        }
+
+        const addressError = validateAddress(formData.address);
+        if (addressError) {
+            setModalError(addressError);
             return;
         }
 
