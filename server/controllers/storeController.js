@@ -137,4 +137,41 @@ const deleteStore = async (req, res) => {
     }
 };
 
-module.exports = { getStores, createStore, updateStore, deleteStore };
+// @desc    Get all stores for guest (public)
+// @route   GET /api/guest/stores
+// @access  Public
+const getGuestStores = async (req, res) => {
+    try {
+        const stores = await Store.findAll({
+            include: [
+                { model: Rating, attributes: ['score'] }
+            ],
+            order: [['createdAt', 'DESC']] // Show newest first
+        });
+
+        const storesWithRatings = stores.map(store => {
+            const ratings = store.Ratings || [];
+            let avgRating = 0;
+
+            if (ratings.length > 0) {
+                const sum = ratings.reduce((acc, curr) => acc + curr.score, 0);
+                avgRating = sum / ratings.length;
+            }
+
+            return {
+                id: store.id,
+                name: store.name,
+                address: store.address,
+                email: store.email,
+                rating: parseFloat(avgRating.toFixed(1)),
+                ratingCount: ratings.length
+            };
+        });
+
+        res.json(storesWithRatings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { getStores, createStore, updateStore, deleteStore, getGuestStores };

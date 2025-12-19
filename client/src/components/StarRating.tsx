@@ -33,7 +33,7 @@ export const StarRating = ({ rating, onRatingChange, readonly = false, size = 16
                             "fill-current transition-colors",
                             (hoverRating || rating) >= star
                                 ? "text-amber-400 fill-amber-400"
-                                : "text-slate-600 fill-transparent"
+                                : "text-slate-300 fill-transparent"
                         )}
                     />
                 </button>

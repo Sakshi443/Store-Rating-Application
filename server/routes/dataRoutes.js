@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getUsers, createUser } = require('../controllers/userController');
 const { getAdminStats, getStoreStats, getUserStats } = require('../controllers/statsController');
-const { getStores, createStore, updateStore, deleteStore } = require('../controllers/storeController');
+const { getStores, createStore, updateStore, deleteStore, getGuestStores } = require('../controllers/storeController');
 const { submitRating, getPublicStores } = require('../controllers/ratingController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
@@ -16,6 +16,7 @@ router.post('/stores', protect, createStore);
 router.put('/stores/:id', protect, updateStore);
 router.delete('/stores/:id', protect, deleteStore);
 router.get('/public/stores', protect, getPublicStores);
+router.get('/guest/stores', getGuestStores);
 
 // Rating Routes
 router.post('/ratings', protect, submitRating);

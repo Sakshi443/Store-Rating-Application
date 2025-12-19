@@ -7,6 +7,7 @@ import { Input } from '../components/Input';
 import { Modal } from '../components/Modal';
 import { StarRating } from '../components/StarRating';
 import { Activity, CreditCard, Users, Search, Lock, Star } from 'lucide-react';
+import { validatePassword } from '../lib/validation';
 
 interface UserStats {
     totalReviewsGiven: number;
@@ -81,6 +82,13 @@ const Dashboard = () => {
         e.preventDefault();
         setPasswordError('');
         setPasswordSuccess('');
+
+        const passwordErrorMsg = validatePassword(passwordData.newPassword);
+        if (passwordErrorMsg) {
+            setPasswordError(passwordErrorMsg);
+            return;
+        }
+
         try {
             const res = await fetch(`${config.API_URL}/auth/password`, {
                 method: 'PUT',
@@ -105,7 +113,8 @@ const Dashboard = () => {
         store.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) return <div className="text-white p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
+
 
     const statData = [
         {
@@ -138,8 +147,8 @@ const Dashboard = () => {
         <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Dashboard</h2>
-                    <p className="text-slate-400">
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h2>
+                    <p className="text-slate-500">
                         Welcome back, {user?.name || user?.email}! Here's an overview of your account.
                     </p>
                 </div>
@@ -152,16 +161,16 @@ const Dashboard = () => {
                 {statData.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
-                        <Card key={index} className="border-white/5 bg-white/5 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <Card key={index} className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-all">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-slate-200">
+                                <CardTitle className="text-sm font-medium text-slate-500">
                                     {stat.title}
                                 </CardTitle>
                                 <Icon className="h-4 w-4 text-slate-400" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                                <p className="text-xs text-slate-400">{stat.description}</p>
+                                <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+                                <p className="text-xs text-slate-500">{stat.description}</p>
                             </CardContent>
                         </Card>
                     );
@@ -169,7 +178,7 @@ const Dashboard = () => {
             </div>
 
             {/* Stores Section */}
-            <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+            <Card className="border-slate-200 bg-white shadow-sm">
                 <CardHeader>
                     <CardTitle>Registered Stores</CardTitle>
                     <CardDescription>
@@ -188,18 +197,18 @@ const Dashboard = () => {
 
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredStores.map(store => (
-                            <div key={store.id} className="rounded-lg border border-white/10 p-4 bg-black/20 hover:bg-black/40 transition-colors">
+                            <div key={store.id} className="rounded-lg border border-slate-200 p-4 bg-slate-50 hover:bg-white hover:shadow-md transition-all">
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
-                                        <h4 className="font-semibold text-white">{store.name}</h4>
-                                        <p className="text-sm text-slate-400">{store.address}</p>
+                                        <h4 className="font-semibold text-slate-900">{store.name}</h4>
+                                        <p className="text-sm text-slate-500">{store.address}</p>
                                     </div>
-                                    <div className="flex items-center text-amber-400 text-sm font-bold">
+                                    <div className="flex items-center text-amber-500 text-sm font-bold">
                                         <span className="mr-1">{store.rating}</span>
-                                        <span className="text-slate-500 font-normal">({store.ratingCount})</span>
+                                        <span className="text-slate-400 font-normal">({store.ratingCount})</span>
                                     </div>
                                 </div>
-                                <div className="mt-4 pt-4 border-t border-white/5">
+                                <div className="mt-4 pt-4 border-t border-slate-200">
                                     <div className="flex items-center justify-between">
                                         <span className="text-xs text-slate-400">Your Rating:</span>
                                         <StarRating
@@ -226,8 +235,8 @@ const Dashboard = () => {
                 title="Change Password"
             >
                 <form onSubmit={handleChangePassword} className="space-y-4">
-                    {passwordError && <div className="text-red-400 text-sm">{passwordError}</div>}
-                    {passwordSuccess && <div className="text-green-400 text-sm">{passwordSuccess}</div>}
+                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{passwordError}</div>}
+                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{passwordSuccess}</div>}
 
                     <Input
                         label="Current Password"

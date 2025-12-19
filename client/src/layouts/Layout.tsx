@@ -51,7 +51,13 @@ export default function Layout() {
     );
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black text-white selection:bg-blue-500/30">
+        <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-hidden">
+            {/* Background Gradients */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[120px]" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-rose-200/40 rounded-full blur-[120px]" />
+                <div className="absolute top-[40%] left-[40%] w-[400px] h-[400px] bg-amber-100/40 rounded-full blur-[100px]" />
+            </div>
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
@@ -59,7 +65,7 @@ export default function Layout() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm lg:hidden"
+                        className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm lg:hidden"
                         onClick={() => setIsMobileMenuOpen(false)}
                     />
                 )}
@@ -68,24 +74,24 @@ export default function Layout() {
             {/* Sidebar - Desktop & Mobile */}
             <motion.aside
                 className={cn(
-                    "fixed top-0 left-0 z-50 h-full w-72 border-r border-white/10 bg-slate-950/50 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0",
+                    "fixed top-0 left-0 z-50 h-full w-72 border-r border-slate-200 bg-white/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0",
                     isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
                 <div className="flex h-full flex-col">
                     {/* Logo */}
-                    <div className="flex h-16 items-center justify-between border-b border-white/10 px-6">
+                    <div className="flex h-16 items-center justify-between border-b border-slate-200 px-6">
                         <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 shadow-lg shadow-blue-500/20">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 shadow-lg shadow-blue-200">
                                 <span className="text-white">R</span>
                             </div>
-                            <span className="bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
                                 Roxiler
                             </span>
                         </Link>
                         <button
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="lg:hidden text-slate-400 hover:text-white"
+                            className="lg:hidden text-slate-500 hover:text-slate-900"
                         >
                             <X size={20} />
                         </button>
@@ -93,14 +99,14 @@ export default function Layout() {
 
                     {/* User Info */}
                     <div className="p-6">
-                        <div className="rounded-xl border border-white/5 bg-white/5 p-4">
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                             <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/20 text-blue-400">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                                     <User size={20} />
                                 </div>
                                 <div className="overflow-hidden">
-                                    <p className="truncate font-medium text-white">{user?.email}</p>
-                                    <p className="truncate text-xs text-slate-400">{user?.role}</p>
+                                    <p className="truncate font-medium text-slate-900">{user?.email}</p>
+                                    <p className="truncate text-xs text-slate-500">{user?.role}</p>
                                 </div>
                             </div>
                         </div>
@@ -120,11 +126,11 @@ export default function Layout() {
                                     className={cn(
                                         "group flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200",
                                         isActive
-                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
-                                            : "text-slate-400 hover:bg-white/5 hover:text-white"
+                                            ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                                     )}
                                 >
-                                    <Icon size={18} className={cn("transition-colors", isActive ? "text-white" : "text-slate-500 group-hover:text-white")} />
+                                    <Icon size={18} className={cn("transition-colors", isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600")} />
                                     {item.label}
                                 </Link>
                             );
@@ -132,10 +138,10 @@ export default function Layout() {
                     </nav>
 
                     {/* Logout */}
-                    <div className="border-t border-white/10 p-4">
+                    <div className="border-t border-slate-200 p-4">
                         <Button
                             variant="ghost"
-                            className="w-full justify-start gap-3 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700"
                             onClick={handleLogout}
                         >
                             <LogOut size={18} />
@@ -146,17 +152,17 @@ export default function Layout() {
             </motion.aside>
 
             {/* Main Content */}
-            <div className="lg:pl-72">
+            <div className="lg:pl-72 relative z-10">
                 {/* Topbar - Mobile Only */}
-                <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-slate-950/50 px-4 backdrop-blur-xl lg:hidden">
+                <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-xl lg:hidden">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setIsMobileMenuOpen(true)}
-                            className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"
+                            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                         >
                             <Menu size={20} />
                         </button>
-                        <span className="font-semibold">Roxiler Systems</span>
+                        <span className="font-semibold text-slate-900">Roxiler Systems</span>
                     </div>
                 </header>
 

@@ -5,6 +5,7 @@ import { Button } from '../components/Button';
 import { Plus, Search, MoreHorizontal, Users, Activity, Store as StoreIcon } from 'lucide-react';
 import { Input } from '../components/Input';
 import { Modal } from '../components/Modal';
+import { validateName, validateEmail, validatePassword, validateAddress } from '../lib/validation';
 
 interface User {
     id: number;
@@ -94,6 +95,31 @@ const AdminDashboard = () => {
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
         setUserFormError('');
+
+        const nameError = validateName(newUser.name);
+        if (nameError) {
+            setUserFormError(nameError);
+            return;
+        }
+
+        const emailError = validateEmail(newUser.email);
+        if (emailError) {
+            setUserFormError(emailError);
+            return;
+        }
+
+        const passwordError = validatePassword(newUser.password);
+        if (passwordError) {
+            setUserFormError(passwordError);
+            return;
+        }
+
+        const addressError = validateAddress(newUser.address);
+        if (addressError) {
+            setUserFormError(addressError);
+            return;
+        }
+
         try {
             const res = await fetch(`${config.API_URL}/users`, {
                 method: 'POST',
@@ -116,6 +142,24 @@ const AdminDashboard = () => {
     const handleSaveStore = async (e: React.FormEvent) => {
         e.preventDefault();
         setStoreFormError('');
+
+        const nameError = validateName(newStore.name);
+        if (nameError) {
+            setStoreFormError(nameError);
+            return;
+        }
+
+        const emailError = validateEmail(newStore.email);
+        if (emailError) {
+            setStoreFormError(emailError);
+            return;
+        }
+
+        const addressError = validateAddress(newStore.address);
+        if (addressError) {
+            setStoreFormError(addressError);
+            return;
+        }
 
         if (!newStore.ownerId && !editingStoreId) { // Owner required for new stores
             setStoreFormError('Please select a Store Owner');
@@ -181,7 +225,7 @@ const AdminDashboard = () => {
 
     const storeOwners = users.filter(u => u.role === 'Store Owner');
 
-    if (loading) return <div className="text-white p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
 
     const statCards = [
         { title: "Total Ratings", value: stats?.totalRatings || 0, icon: Activity, color: "text-green-400" },
@@ -195,8 +239,8 @@ const AdminDashboard = () => {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Admin Dashboard</h2>
-                    <p className="text-slate-400">Manage users, stores, and system settings.</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Admin Dashboard</h2>
+                    <p className="text-slate-500">Manage users, stores, and system settings.</p>
                 </div>
                 {activeTab === 'users' ? (
                     <Button onClick={() => setShowAddUser(true)} className="w-full sm:w-auto">
@@ -208,15 +252,15 @@ const AdminDashboard = () => {
             {/* Stats */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {statCards.map((stat, index) => (
-                    <Card key={index} className="border-white/5 bg-white/5 backdrop-blur-sm">
+                    <Card key={index} className="border-slate-200 bg-white shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-300">
+                            <CardTitle className="text-sm font-medium text-slate-500">
                                 {stat.title}
                             </CardTitle>
                             <stat.icon className={`h-4 w-4 ${stat.color}`} />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-white">{stat.value}</div>
+                            <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
                         </CardContent>
                     </Card>
                 ))}
@@ -224,22 +268,22 @@ const AdminDashboard = () => {
 
             {/* Tabs & Content */}
             <div className="space-y-4">
-                <div className="flex space-x-2 border-b border-white/10 pb-2">
+                <div className="flex space-x-2 border-b border-slate-200 pb-2">
                     <button
                         onClick={() => setActiveTab('users')}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'users' ? 'text-white border-b-2 border-blue-500' : 'text-slate-400 hover:text-white'}`}
+                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'users' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-900'}`}
                     >
                         Users
                     </button>
                     <button
                         onClick={() => setActiveTab('stores')}
-                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'stores' ? 'text-white border-b-2 border-blue-500' : 'text-slate-400 hover:text-white'}`}
+                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeTab === 'stores' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-900'}`}
                     >
                         Stores
                     </button>
                 </div>
 
-                <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                <Card className="border-slate-200 bg-white shadow-sm">
                     <CardHeader>
                         <CardTitle>{activeTab === 'users' ? 'Users' : 'Store Manager'}</CardTitle>
                         <CardDescription>
@@ -259,7 +303,7 @@ const AdminDashboard = () => {
                             </div>
                             {activeTab === 'users' && (
                                 <select
-                                    className="h-10 rounded-md border border-white/10 bg-black/20 px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value={roleFilter}
                                     onChange={(e) => setRoleFilter(e.target.value)}
                                 >
@@ -271,9 +315,9 @@ const AdminDashboard = () => {
                             )}
                         </div>
 
-                        <div className="overflow-x-auto rounded-lg border border-white/10">
-                            <table className="w-full text-left text-sm text-slate-400">
-                                <thead className="bg-white/5 text-xs uppercase text-slate-200">
+                        <div className="overflow-x-auto rounded-lg border border-slate-200">
+                            <table className="w-full text-left text-sm text-slate-500">
+                                <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                                     <tr>
                                         {activeTab === 'users' ? (
                                             <>
@@ -297,21 +341,21 @@ const AdminDashboard = () => {
                                     {activeTab === 'users' ? (
                                         filteredUsers.length > 0 ? (
                                             filteredUsers.map((user) => (
-                                                <tr key={user.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                                    <td className="px-6 py-4 font-medium text-white">{user.name}</td>
+                                                <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                                    <td className="px-6 py-4 font-medium text-slate-900">{user.name}</td>
                                                     <td className="px-6 py-4">{user.email}</td>
                                                     <td className="px-6 py-4">{user.address || '-'}</td>
                                                     <td className="px-6 py-4">
-                                                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${user.role === 'System Administrator' ? 'bg-purple-500/10 text-purple-400' :
-                                                            user.role === 'Store Owner' ? 'bg-blue-500/10 text-blue-400' :
-                                                                'bg-slate-500/10 text-slate-400'
+                                                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${user.role === 'System Administrator' ? 'bg-purple-100 text-purple-700' :
+                                                            user.role === 'Store Owner' ? 'bg-blue-100 text-blue-700' :
+                                                                'bg-slate-100 text-slate-700'
                                                             }`}>
                                                             {user.role}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         {user.rating ? (
-                                                            <span className="text-amber-400 font-bold">★ {user.rating}</span>
+                                                            <span className="text-amber-500 font-bold">★ {user.rating}</span>
                                                         ) : '-'}
                                                     </td>
                                                     <td className="px-6 py-4 text-right">
@@ -329,21 +373,21 @@ const AdminDashboard = () => {
                                     ) : (
                                         filteredStores.length > 0 ? (
                                             filteredStores.map((store) => (
-                                                <tr key={store.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                                <tr key={store.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                                                     <td className="px-6 py-4">
-                                                        <div className="font-medium text-white">{store.name}</div>
+                                                        <div className="font-medium text-slate-900">{store.name}</div>
                                                         <div className="text-xs">{store.address}</div>
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         {store.owner ? (
                                                             <>
-                                                                <div className="text-white">{store.owner.name}</div>
+                                                                <div className="text-slate-900">{store.owner.name}</div>
                                                                 <div className="text-xs">{store.owner.email}</div>
                                                                 <div className="text-xs text-slate-500">{store.owner.address}</div>
                                                             </>
-                                                        ) : <span className="text-slate-500">Unknown</span>}
+                                                        ) : <span className="text-slate-400">Unknown</span>}
                                                     </td>
-                                                    <td className="px-6 py-4 text-amber-400 font-bold">
+                                                    <td className="px-6 py-4 text-amber-500 font-bold">
                                                         ★ {store.rating || 0}
                                                     </td>
                                                 </tr>
@@ -395,9 +439,9 @@ const AdminDashboard = () => {
                         onChange={(e) => setNewUser({ ...newUser, address: e.target.value })}
                     />
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200">Role</label>
+                        <label className="text-sm font-medium text-slate-700">Role</label>
                         <select
-                            className="w-full rounded-md border border-white/10 bg-black/20 p-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={newUser.role}
                             onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                         >
@@ -422,7 +466,7 @@ const AdminDashboard = () => {
                 title={editingStoreId ? "Edit Store" : "Add New Store"}
             >
                 <form onSubmit={handleSaveStore} className="space-y-4">
-                    {storeFormError && <div className="text-red-400 text-sm">{storeFormError}</div>}
+                    {storeFormError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{storeFormError}</div>}
 
                     <Input
                         label="Store Name"
@@ -445,9 +489,9 @@ const AdminDashboard = () => {
                     />
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-200">Assign Owner</label>
+                        <label className="text-sm font-medium text-slate-700">Assign Owner</label>
                         <select
-                            className="w-full rounded-md border border-white/10 bg-black/20 p-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={newStore.ownerId}
                             onChange={(e) => setNewStore({ ...newStore, ownerId: e.target.value })}
                             required
@@ -480,7 +524,7 @@ const AdminDashboard = () => {
                 title="Confirm Deletion"
             >
                 <div className="space-y-4">
-                    <p className="text-slate-300">
+                    <p className="text-slate-600">
                         Are you sure you want to delete this store? This action cannot be undone.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">

@@ -5,6 +5,7 @@ import { Button } from '../components/Button';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { TrendingUp, Star, Lock, Plus } from 'lucide-react';
+import { validatePassword, validateName, validateEmail, validateAddress } from '../lib/validation';
 
 interface Review {
     id: number;
@@ -72,6 +73,13 @@ const StoreOwnerDashboard = () => {
         e.preventDefault();
         setPasswordError('');
         setPasswordSuccess('');
+
+        const passwordErrorMsg = validatePassword(passwordData.newPassword);
+        if (passwordErrorMsg) {
+            setPasswordError(passwordErrorMsg);
+            return;
+        }
+
         try {
             const res = await fetch(`${config.API_URL}/auth/password`, {
                 method: 'PUT',
@@ -96,8 +104,21 @@ const StoreOwnerDashboard = () => {
         setStoreError('');
         setStoreSuccess('');
 
-        if (!newStore.name || !newStore.address || !newStore.email) {
-            setStoreError('All fields are required');
+        const nameError = validateName(newStore.name);
+        if (nameError) {
+            setStoreError(nameError);
+            return;
+        }
+
+        const emailError = validateEmail(newStore.email);
+        if (emailError) {
+            setStoreError(emailError);
+            return;
+        }
+
+        const addressError = validateAddress(newStore.address);
+        if (addressError) {
+            setStoreError(addressError);
             return;
         }
 
@@ -126,26 +147,26 @@ const StoreOwnerDashboard = () => {
 
     const activeStore = stores.find(s => s.id === selectedStoreId) || stores[0];
 
-    if (loading) return <div className="text-white p-8">Loading dashboard...</div>;
+    if (loading) return <div className="text-slate-900 p-8">Loading dashboard...</div>;
 
     if (stores.length === 0) {
         return (
             <div className="flex flex-col gap-4">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Welcome, Store Owner!</h2>
-                    <p className="text-slate-400">Please register your store to start tracking statistics.</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome, Store Owner!</h2>
+                    <p className="text-slate-500">Please register your store to start tracking statistics.</p>
                 </div>
 
                 <div className="max-w-md mx-auto w-full mt-8">
-                    <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                    <Card className="border-slate-200 bg-white shadow-sm">
                         <CardHeader>
                             <CardTitle>Register Your Store</CardTitle>
                             <CardDescription>Enter details about your flagship store.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleCreateStore} className="space-y-4">
-                                {storeError && <div className="text-red-400 text-sm">{storeError}</div>}
-                                {storeSuccess && <div className="text-green-400 text-sm">{storeSuccess}</div>}
+                                {storeError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{storeError}</div>}
+                                {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{storeSuccess}</div>}
 
                                 <Input
                                     label="Store Name"
@@ -220,8 +241,8 @@ const StoreOwnerDashboard = () => {
         <div className="space-y-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Store Dashboard</h2>
-                    <p className="text-slate-400">Monitor your store performance and ratings.</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Store Dashboard</h2>
+                    <p className="text-slate-500">Monitor your store performance and ratings.</p>
                 </div>
                 <div className="flex gap-2">
                     <Button onClick={() => setShowStoreModal(true)}>
@@ -241,8 +262,8 @@ const StoreOwnerDashboard = () => {
                             key={store.id}
                             onClick={() => setSelectedStoreId(store.id)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${store.id === activeStore.id
-                                ? 'bg-white text-black'
-                                : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                                ? 'bg-blue-600 text-white shadow-md'
+                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
                                 }`}
                         >
                             {store.name}
@@ -252,57 +273,57 @@ const StoreOwnerDashboard = () => {
             )}
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                <Card className="border-slate-200 bg-white shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-200">
+                        <CardTitle className="text-sm font-medium text-slate-500">
                             Average Rating
                         </CardTitle>
                         <Star className="h-4 w-4 text-amber-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{activeStore.averageRating} / 5</div>
-                        <p className="text-xs text-slate-400">Based on {activeStore.totalRatings} reviews</p>
+                        <div className="text-2xl font-bold text-slate-900">{activeStore.averageRating} / 5</div>
+                        <p className="text-xs text-slate-500">Based on {activeStore.totalRatings} reviews</p>
                     </CardContent>
                 </Card>
-                <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                <Card className="border-slate-200 bg-white shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-200">
+                        <CardTitle className="text-sm font-medium text-slate-500">
                             Total Reviews
                         </CardTitle>
                         <TrendingUp className="h-4 w-4 text-slate-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{activeStore.totalRatings}</div>
-                        <p className="text-xs text-slate-400">Total feedback received</p>
+                        <div className="text-2xl font-bold text-slate-900">{activeStore.totalRatings}</div>
+                        <p className="text-xs text-slate-500">Total feedback received</p>
                     </CardContent>
                 </Card>
-                <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                <Card className="border-slate-200 bg-white shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-200">
+                        <CardTitle className="text-sm font-medium text-slate-500">
                             5-Star Ratings
                         </CardTitle>
                         <Star className="h-4 w-4 text-green-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{activeStore.ratingCounts[5] || 0}</div>
-                        <p className="text-xs text-slate-400">Happy customers</p>
+                        <div className="text-2xl font-bold text-slate-900">{activeStore.ratingCounts[5] || 0}</div>
+                        <p className="text-xs text-slate-500">Happy customers</p>
                     </CardContent>
                 </Card>
-                <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+                <Card className="border-slate-200 bg-white shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-slate-200">
+                        <CardTitle className="text-sm font-medium text-slate-500">
                             1-Star Ratings
                         </CardTitle>
                         <Star className="h-4 w-4 text-red-400" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-white">{activeStore.ratingCounts[1] || 0}</div>
-                        <p className="text-xs text-slate-400">Areas to improve</p>
+                        <div className="text-2xl font-bold text-slate-900">{activeStore.ratingCounts[1] || 0}</div>
+                        <p className="text-xs text-slate-500">Areas to improve</p>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card className="border-white/5 bg-white/5 backdrop-blur-sm">
+            <Card className="border-slate-200 bg-white shadow-sm">
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         <div>
@@ -317,17 +338,17 @@ const StoreOwnerDashboard = () => {
                     {activeStore.reviews && activeStore.reviews.length > 0 ? (
                         <div className="space-y-4">
                             {activeStore.reviews.map((review) => (
-                                <div key={review.id} className="flex items-center justify-between p-4 rounded-lg bg-black/20 border border-white/5">
+                                <div key={review.id} className="flex items-center justify-between p-4 rounded-lg bg-slate-50 border border-slate-200">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-full bg-blue-600/20 flex items-center justify-center text-blue-400 font-bold">
+                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
                                             {review.user.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
-                                            <p className="font-medium text-white">{review.user}</p>
-                                            <p className="text-xs text-slate-400">{new Date(review.date).toLocaleDateString()}</p>
+                                            <p className="font-medium text-slate-900">{review.user}</p>
+                                            <p className="text-xs text-slate-500">{new Date(review.date).toLocaleDateString()}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1 text-amber-400">
+                                    <div className="flex items-center gap-1 text-amber-500">
                                         <Star className="h-4 w-4 fill-current" />
                                         <span className="font-bold">{review.score}</span>
                                     </div>
@@ -335,7 +356,7 @@ const StoreOwnerDashboard = () => {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-white/10 bg-white/5">
+                        <div className="flex h-[200px] items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50">
                             <div className="text-center text-slate-500">
                                 <Star className="mx-auto h-8 w-8 opacity-50 mb-2" />
                                 <p>No reviews yet.</p>
@@ -352,8 +373,8 @@ const StoreOwnerDashboard = () => {
                 title="Change Password"
             >
                 <form onSubmit={handleChangePassword} className="space-y-4">
-                    {passwordError && <div className="text-red-400 text-sm">{passwordError}</div>}
-                    {passwordSuccess && <div className="text-green-400 text-sm">{passwordSuccess}</div>}
+                    {passwordError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{passwordError}</div>}
+                    {passwordSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{passwordSuccess}</div>}
 
                     <Input
                         label="Current Password"
@@ -385,8 +406,8 @@ const StoreOwnerDashboard = () => {
                 title="Register New Store"
             >
                 <form onSubmit={handleCreateStore} className="space-y-4">
-                    {storeError && <div className="text-red-400 text-sm">{storeError}</div>}
-                    {storeSuccess && <div className="text-green-400 text-sm">{storeSuccess}</div>}
+                    {storeError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{storeError}</div>}
+                    {storeSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{storeSuccess}</div>}
 
                     <Input
                         label="Store Name"

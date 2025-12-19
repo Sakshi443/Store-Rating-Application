@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, AlertCircle, Building } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, AlertCircle, Building, Store, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/Card';
@@ -45,19 +46,26 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex min-h-screen w-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black p-4 text-white selection:bg-blue-500/30">
+        <div className="flex min-h-screen w-full bg-slate-50 text-slate-900">
             <div className="grid w-full lg:grid-cols-2">
-                {/* Left Panel - Visual (Swapped for variety) */}
-                <div className="hidden lg:flex flex-col justify-center items-center bg-white/5 backdrop-blur-3xl rounded-3xl m-4 border border-white/10 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/20 to-blue-500/20" />
+                {/* Left Panel - Visual */}
+                <div className="hidden lg:flex flex-col justify-center items-center bg-slate-100/50 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-indigo-600/5" />
+                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(79,70,229,0.1),transparent_50%)]" />
+
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative z-10 text-center p-10 max-w-xl"
                     >
-                        <h2 className="mb-6 text-3xl font-bold text-white">Join Our Platform</h2>
-                        <p className="text-lg text-slate-300">
+                        <div className="mb-8 flex justify-center">
+                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 shadow-xl shadow-indigo-500/20">
+                                <Store className="h-10 w-10 text-white" />
+                            </div>
+                        </div>
+                        <h2 className="mb-6 text-3xl font-bold text-slate-900">Join Our Platform</h2>
+                        <p className="text-lg text-slate-600">
                             Create an account to start your journey. Whether you're a shopper, a store owner, or an administrator, we have the tools you need.
                         </p>
                     </motion.div>
@@ -72,15 +80,25 @@ const Signup = () => {
                         className="w-full max-w-md space-y-8"
                     >
                         <div className="text-center lg:text-left">
-                            <h1 className="text-4xl font-bold tracking-tight text-white lg:text-5xl">
+                            <Link to="/" className="lg:hidden inline-flex items-center gap-2 mb-8 text-slate-900 font-bold text-xl">
+                                <Store className="h-6 w-6 text-blue-600" />
+                                StoreRate
+                            </Link>
+
+                            <Link to="/" className="hidden lg:inline-flex items-center text-sm text-slate-500 hover:text-blue-600 mb-6 transition-colors">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Back to Home
+                            </Link>
+
+                            <h1 className="text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
                                 Create Account
                             </h1>
-                            <p className="mt-4 text-lg text-slate-400">
+                            <p className="mt-2 text-slate-500">
                                 Get started with your free account today.
                             </p>
                         </div>
 
-                        <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                        <Card className="border-slate-200 bg-white shadow-xl shadow-slate-200/50">
                             <form onSubmit={handleSubmit}>
                                 <CardHeader>
                                     <CardTitle>Sign Up</CardTitle>
@@ -94,7 +112,7 @@ const Signup = () => {
                                         <motion.div
                                             initial={{ opacity: 0, height: 0 }}
                                             animate={{ opacity: 1, height: 'auto' }}
-                                            className="flex items-center gap-2 rounded-lg bg-red-500/10 p-3 text-sm text-red-500"
+                                            className="flex items-center gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-100"
                                         >
                                             <AlertCircle size={16} />
                                             {error}
@@ -102,7 +120,7 @@ const Signup = () => {
                                     )}
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Full Name</label>
+                                        <label className="text-sm font-medium text-slate-700">Full Name</label>
                                         <Input
                                             type="text"
                                             placeholder="John Doe"
@@ -110,11 +128,12 @@ const Signup = () => {
                                             onChange={(e) => setName(e.target.value)}
                                             icon={User}
                                             required
+                                            className="bg-slate-50 border-slate-200 focus:bg-white text-slate-900"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Email</label>
+                                        <label className="text-sm font-medium text-slate-700">Email</label>
                                         <Input
                                             type="email"
                                             placeholder="name@example.com"
@@ -122,11 +141,12 @@ const Signup = () => {
                                             onChange={(e) => setEmail(e.target.value)}
                                             icon={Mail}
                                             required
+                                            className="bg-slate-50 border-slate-200 focus:bg-white text-slate-900"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Address</label>
+                                        <label className="text-sm font-medium text-slate-700">Address</label>
                                         <Input
                                             type="text"
                                             placeholder="123 Main St"
@@ -134,11 +154,12 @@ const Signup = () => {
                                             onChange={(e) => setAddress(e.target.value)}
                                             icon={Building}
                                             required
+                                            className="bg-slate-50 border-slate-200 focus:bg-white text-slate-900"
                                         />
                                     </div>
 
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Password</label>
+                                        <label className="text-sm font-medium text-slate-700">Password</label>
                                         <Input
                                             type="password"
                                             placeholder="••••••••"
@@ -146,20 +167,21 @@ const Signup = () => {
                                             onChange={(e) => setPassword(e.target.value)}
                                             icon={Lock}
                                             required
+                                            className="bg-slate-50 border-slate-200 focus:bg-white text-slate-900"
                                         />
                                     </div>
 
-                                    {/* Role selection removed using a fixed 'Normal User' role */}
+                                    {/* Role selection is hidden/fixed to Normal User */}
                                 </CardContent>
 
                                 <CardFooter className="flex flex-col gap-4">
-                                    <Button type="submit" className="w-full" isLoading={loading}>
+                                    <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" isLoading={loading}>
                                         Create Account <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
 
-                                    <p className="text-center text-sm text-slate-400">
+                                    <p className="text-center text-sm text-slate-500">
                                         Already have an account?{' '}
-                                        <Link to="/login" className="font-semibold text-blue-400 hover:text-blue-300 hover:underline">
+                                        <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-500 hover:underline">
                                             Sign in
                                         </Link>
                                     </p>

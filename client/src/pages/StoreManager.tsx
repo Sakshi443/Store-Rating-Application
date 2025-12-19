@@ -205,14 +205,14 @@ const StoreManager = () => {
         (store.owner && store.owner.name.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    if (loading) return <div className="text-white p-8">Loading...</div>;
+    if (loading) return <div className="text-slate-900 p-8">Loading...</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-3xl font-bold tracking-tight text-white">Store Manager</h2>
-                    <p className="text-slate-400">
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-900">Store Manager</h2>
+                    <p className="text-slate-500">
                         {isAdmin ? 'Manage all system stores and ownership.' : 'Manage your registered stores efficiently.'}
                     </p>
                 </div>
@@ -229,7 +229,7 @@ const StoreManager = () => {
                     placeholder={isAdmin ? "Search stores or owners..." : "Search stores..."}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full rounded-md border border-white/10 bg-black/20 pl-10 pr-4 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full rounded-md border border-slate-200 bg-white pl-10 pr-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
             </div>
 
@@ -243,15 +243,15 @@ const StoreManager = () => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             layout
                         >
-                            <Card className="border-white/5 bg-white/5 backdrop-blur-sm hover:border-blue-500/30 transition-colors h-full flex flex-col">
+                            <Card className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-all h-full flex flex-col">
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                            <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
                                                 <Store className="h-5 w-5" />
                                             </div>
                                             <div>
-                                                <CardTitle className="text-lg">{store.name}</CardTitle>
+                                                <CardTitle className="text-lg text-slate-900">{store.name}</CardTitle>
                                                 <CardDescription>{store.email}</CardDescription>
                                             </div>
                                         </div>
@@ -259,31 +259,31 @@ const StoreManager = () => {
                                 </CardHeader>
                                 <CardContent className="flex-1 flex flex-col justify-between">
                                     <div className="space-y-4 mb-4">
-                                        <div className="text-sm text-slate-400 line-clamp-2 min-h-[40px]">
+                                        <div className="text-sm text-slate-500 line-clamp-2 min-h-[40px]">
                                             {store.address}
                                         </div>
                                         {isAdmin && store.owner && (
-                                            <div className="mt-2 text-xs text-blue-300 bg-blue-500/10 p-3 rounded-md space-y-1">
-                                                <div className="font-semibold text-blue-200">Owner Details</div>
+                                            <div className="mt-2 text-xs text-blue-700 bg-blue-50 p-3 rounded-md space-y-1 border border-blue-100">
+                                                <div className="font-semibold text-blue-800">Owner Details</div>
                                                 <div className="grid grid-cols-[60px_1fr] gap-1">
-                                                    <span className="text-blue-400">Name:</span>
+                                                    <span className="text-blue-500">Name:</span>
                                                     <span className="truncate">{store.owner.name}</span>
-                                                    <span className="text-blue-400">Email:</span>
+                                                    <span className="text-blue-500">Email:</span>
                                                     <span className="truncate">{store.owner.email}</span>
-                                                    <span className="text-blue-400">Address:</span>
+                                                    <span className="text-blue-500">Address:</span>
                                                     <span className="truncate">{store.owner.address || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         )}
 
-                                        <div className="flex items-center justify-between text-sm py-2 border-t border-white/5">
+                                        <div className="flex items-center justify-between text-sm py-2 border-t border-slate-100">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-slate-400">Rating:</span>
-                                                <span className="font-bold text-amber-400">{store.averageRating || 0} / 5</span>
+                                                <span className="font-bold text-amber-500">{store.averageRating || 0} / 5</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-slate-400">Reviews:</span>
-                                                <span className="font-bold text-white">{store.totalRatings || 0}</span>
+                                                <span className="font-bold text-slate-900">{store.totalRatings || 0}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -310,7 +310,7 @@ const StoreManager = () => {
                 </AnimatePresence>
 
                 {filteredStores.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-white/10 rounded-lg">
+                    <div className="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-200 rounded-lg">
                         <Store className="mx-auto h-12 w-12 opacity-50 mb-4" />
                         <p className="text-lg">No stores found</p>
                         <p className="text-sm">Try creating a new store or adjusting your search</p>
@@ -325,8 +325,8 @@ const StoreManager = () => {
                 title={editingStore ? 'Edit Store' : 'Create New Store'}
             >
                 <form onSubmit={handleSaveStore} className="space-y-4">
-                    {modalError && <div className="text-red-400 text-sm bg-red-500/10 p-2 rounded">{modalError}</div>}
-                    {modalSuccess && <div className="text-green-400 text-sm bg-green-500/10 p-2 rounded">{modalSuccess}</div>}
+                    {modalError && <div className="text-red-600 text-sm bg-red-50 p-2 rounded border border-red-100">{modalError}</div>}
+                    {modalSuccess && <div className="text-green-600 text-sm bg-green-50 p-2 rounded border border-green-100">{modalSuccess}</div>}
 
                     <Input
                         label="Store Name"
@@ -353,9 +353,9 @@ const StoreManager = () => {
 
                     {isAdmin && (
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-200">Assign Owner</label>
+                            <label className="text-sm font-medium text-slate-700">Assign Owner</label>
                             <select
-                                className="w-full rounded-md border border-white/10 bg-black/20 p-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full rounded-md border border-slate-200 bg-white p-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={formData.ownerId}
                                 onChange={(e) => setFormData({ ...formData, ownerId: e.target.value })}
                                 required={!editingStore}
@@ -388,7 +388,7 @@ const StoreManager = () => {
                 title="Confirm Deletion"
             >
                 <div className="space-y-4">
-                    <p className="text-slate-300">
+                    <p className="text-slate-600">
                         Are you sure you want to delete this store? This action cannot be undone and all associated ratings will be deleted.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">

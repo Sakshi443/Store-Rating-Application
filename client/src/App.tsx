@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import StoreOwnerDashboard from './pages/StoreOwnerDashboard';
@@ -14,7 +15,7 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: ReactNode, allow
   const { user, isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div className="flex h-screen w-full items-center justify-center bg-black text-white">Loading...</div>;
+    return <div className="flex h-screen w-full items-center justify-center bg-slate-50 text-slate-900">Loading...</div>;
   }
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
@@ -34,6 +35,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
