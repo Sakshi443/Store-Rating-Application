@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, AlertCircle, Store, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/Card';
+
 import { motion } from 'framer-motion';
 
 const Login = () => {
