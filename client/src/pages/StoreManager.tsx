@@ -53,23 +53,28 @@ const StoreManager = () => {
 
     const isAdmin = user?.role === 'System Administrator';
 
-    const fetchStores = async () => {
+    const fetchData = async () => {
         setLoading(true);
         try {
-            // Admins get all stores, Owners get their stats (which includes their stores)
-            const endpoint = isAdmin ? `${config.API_URL}/stores` : `${config.API_URL}/stats/store`;
-            const response = await fetch(endpoint, { headers });
+            const storeEndpoint = isAdmin ? `${config.API_URL}/stores` : `${config.API_URL}/stats/store`;
 
-            if (response.ok) {
-                const data = await response.json();
+            const promises = [fetch(storeEndpoint, { headers })];
+            if (isAdmin) {
+                promises.push(fetch(`${config.API_URL}/users`, { headers }));
+            }
+
+            const responses = await Promise.all(promises);
+            const storeRes = responses[0];
+
+            if (storeRes.ok) {
+                const data = await storeRes.json();
                 if (isAdmin) {
-                    // Normalize admin data to match StoreData interface
                     const adminStores = data.map((s: any) => ({
                         id: s.id,
                         name: s.name,
                         address: s.address,
                         email: s.email,
-                        totalRatings: s.Ratings ? s.Ratings.length : 0, // Approximate for list view if not provided
+                        totalRatings: s.Ratings ? s.Ratings.length : 0,
                         averageRating: s.rating,
                         owner: s.owner
                     }));
@@ -78,34 +83,21 @@ const StoreManager = () => {
                     setStores(data.stores || []);
                 }
             }
-        } catch (error) {
-            console.error("Failed to fetch stores", error);
-        } finally {
-            // Fetch owners for admin dropdown
-            if (isAdmin) {
-                fetchOwners();
-            } else {
-                setLoading(false);
-            }
-        }
-    };
 
-    const fetchOwners = async () => {
-        try {
-            const res = await fetch(`${config.API_URL}/users`, { headers });
-            if (res.ok) {
-                const users = await res.json();
+            if (isAdmin && responses[1] && responses[1].ok) {
+                const users = await responses[1].json();
                 setStoreOwners(users.filter((u: User) => u.role === 'Store Owner'));
             }
-        } catch (e) {
-            console.error('Failed to fetch owners');
+
+        } catch (error) {
+            console.error("Failed to fetch data", error);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        fetchStores();
+        fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -161,7 +153,7 @@ const StoreManager = () => {
                 setModalSuccess(editingStore ? 'Store updated successfully' : 'Store created successfully');
                 setTimeout(() => {
                     setIsModalOpen(false);
-                    fetchStores();
+                    fetchData();
                 }, 1500);
             } else {
                 setModalError(data.message || 'Operation failed');
@@ -181,7 +173,7 @@ const StoreManager = () => {
 
             if (res.ok) {
                 setDeleteId(null);
-                fetchStores();
+                fetchData();
             }
         } catch (error) {
             console.error("Failed to delete store", error);
